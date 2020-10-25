@@ -1,0 +1,1 @@
+java -jar target/dependency/webapp-runner.jar target/PAWProjekt-1.0.war
