@@ -1,4 +1,4 @@
-# PAW-Projekt
+# PAWProjekt-backend
 
 ## Building project
 
