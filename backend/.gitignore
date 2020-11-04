@@ -1,2 +1,10 @@
 target
-.idea/sonarlint
+
+#IntelliJ files
+**/*.iml
+**/.idea
+**/.gradle
+
+*.jar
+*.war
+*.ear
