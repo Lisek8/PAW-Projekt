@@ -28,5 +28,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Apply database credentials
+      run: node replaceDataBaseCredentials.js ${{ secrets.DB_URL }} ${{ secrets.DB_USER }} ${{ secrets.DB_PWD }}  
     - name: Build with Maven
       run: mvn clean package
