@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>test</h1>
+    <h1>{{msg}}</h1>
   </div>
 </template>
 
@@ -8,9 +8,14 @@
 import axios from 'axios'
 export default {
   name: 'Content',
+  data () {
+    return {
+      msg: ''
+    }
+  },
   created () {
-    axios.get('http://localhost:8080/hello')
-      .then(res => console.log(res.data))
+    axios.get('https://localhost:8080/hello')
+      .then(res => { this.msg = res.data.hello })
       .catch(err => console.log(err))
   }
 }
