@@ -18,6 +18,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "environment": [
+        "src/env.config.js"
       ]
     },
     "lib": [

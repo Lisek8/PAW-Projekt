@@ -1,4 +1,4 @@
-package com.foxtrot3.Trello.Database;
+package com.foxtrot3.trello.database;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
