@@ -1,4 +1,4 @@
-# frontend
+# PAWProjekt-frontend
 
 ## Project setup
 ```
