@@ -1,4 +1,4 @@
-package com.foxtrot3.Trello.Database;
+package com.foxtrot3.trello.database;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,14 +11,14 @@ public class Hello {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private int id;
-    private String hello;
+    private String helloString;
 
     public String getHello() {
-        return hello;
+        return helloString;
     }
 
     public void setHello(String hello) {
-        this.hello = hello;
+        this.helloString = hello;
     }
 
     public int getId() {
