@@ -6,7 +6,7 @@
 
 <script>
 import axios from 'axios'
-import * as environment from '..\\..\\env.config.js'
+import * as environment from '..\\env.config.js'
 export default {
   name: 'Content',
   data () {
