@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <img src="../assets/trelloIcon.png" alt="Trello">
+    Trollo
   </header>
 </template>
 
@@ -13,11 +13,18 @@ export default {
 
 <style scoped>
     .header {
-    background-color: #3467eb;
-    text-align: center;
-    padding: 10px;
-    }
-    .header a{
-        padding-right: 5px;
+      background-color: #3467eb;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      padding: 10px 60px;
+      z-index: 19;
+      box-sizing: border-box;
+      text-align: center;
+      font-weight: 600;
+      font-size: 20px;
     }
 </style>

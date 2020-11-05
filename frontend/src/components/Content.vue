@@ -6,6 +6,7 @@
 
 <script>
 import axios from 'axios'
+import * as environment from '..\\..\\app.config.js'
 export default {
   name: 'Content',
   data () {
@@ -14,7 +15,7 @@ export default {
     }
   },
   created () {
-    axios.get('https://localhost:8080/hello')
+    axios.get(environment.restServicesPath + 'hello')
       .then(res => { this.msg = res.data.hello })
       .catch(err => console.log(err))
   }
