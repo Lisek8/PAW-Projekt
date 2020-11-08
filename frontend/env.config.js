@@ -1,4 +1,4 @@
-module.exports = {
+export const Environment = {
   publicPath: '/webui/',
-  restServices: '/rest-services/'
+  restServices: 'https://paw-foxtrot3-trello.herokuapp.com/rest-services/'
 };
