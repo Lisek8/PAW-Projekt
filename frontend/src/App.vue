@@ -1,7 +1,9 @@
 <template>
   <div>
     <Menu />
-    <Login />
+    <div class="container mt-3 mb-3 pt-3 pb-3 shadow">
+      <router-view/>
+    </div>
   </div>
 </template>
 
