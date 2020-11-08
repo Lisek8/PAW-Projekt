@@ -11,6 +11,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "allowJs": true,
+    "outDir": "dist",
     "baseUrl": ".",
     "types": [
       "webpack-env"
@@ -20,7 +22,7 @@
         "src/*"
       ],
       "environment": [
-        "src/env.config.js"
+        "env.config.js"
       ]
     },
     "lib": [

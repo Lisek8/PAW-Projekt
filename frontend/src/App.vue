@@ -1,26 +1,12 @@
 <template>
-  <Menu />
-  <Content />
+  <div>
+    <Menu />
+    <div class="container mt-3 mb-3 pt-3 pb-3 shadow">
+      <router-view/>
+    </div>
+  </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import Content from './components/Content.vue'
-import Menu from './components/Menu.vue'
+<script src="./app"></script>
 
-@Options({
-  components: {
-    Content,
-    Menu
-  }
-})
-export default class App extends Vue {}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-}
-</style>
+<style src="./app.css"></style>
