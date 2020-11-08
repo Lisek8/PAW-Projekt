@@ -4,9 +4,9 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import Content from './components/Content.vue'
-import Menu from './components/Menu.vue'
+import { Options, Vue } from 'vue-class-component';
+import Content from './components/Content.vue';
+import Menu from './components/Menu.vue';
 
 @Options({
   components: {

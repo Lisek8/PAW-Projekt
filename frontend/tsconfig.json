@@ -20,7 +20,7 @@
         "src/*"
       ],
       "environment": [
-        "src/env.config.js"
+        "env.config.js"
       ]
     },
     "lib": [
