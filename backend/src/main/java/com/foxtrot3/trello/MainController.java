@@ -9,14 +9,20 @@ import com.foxtrot3.trello.database.RegisterForm;
 import com.foxtrot3.trello.database.list.ListRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
-import com.foxtrot3.trello.security.UserPrincipal;
+import com.foxtrot3.trello.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +46,12 @@ public class MainController extends SpringBootServletInitializer {
     UserBoardRepo userBoardRepo;
     @Autowired
     ListRepo listRepo;
-
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    UserDetailsService userDetailsService;
+    @Autowired
+    JwtUtil jwtUtil;
 
     @GetMapping("/hello")
     @ResponseBody
@@ -61,6 +72,19 @@ public class MainController extends SpringBootServletInitializer {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setUserType("USER");
         userRepo.save(user);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+        }catch (BadCredentialsException e){
+            throw new RuntimeException("Incorrect email or password",e);
+        }
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
     @GetMapping("/boards")
