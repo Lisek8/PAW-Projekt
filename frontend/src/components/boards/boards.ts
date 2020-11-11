@@ -1,5 +1,6 @@
 import { Ref, ref } from 'vue';
 import { Board } from '@/dataStructures/board';
+import { Environment } from './../../../env.config';
 
 export default {
   name: 'Boards',
@@ -11,52 +12,52 @@ export default {
     recentlyViewed.value.push(
       {
         title: 'Test0',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test0'
       },
       {
         title: 'Test1',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test1'
       },
       {
         title: 'Test2',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test2'
       },
       {
         title: 'Test3',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test3'
       },
       {
         title: 'Test4',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test4'
       },
       {
         title: 'Test5',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test5'
       },
       {
         title: 'Test6',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test6'
       },
       {
         title: 'Test7',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test7'
       },
       {
         title: 'Test8',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test8'
       },
       {
         title: 'Test9',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test9'
       }
     );
@@ -65,52 +66,52 @@ export default {
     privateBoards.value.push(
       {
         title: 'Test0',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test0'
       },
       {
         title: 'Test1',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test1'
       },
       {
         title: 'Test2',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test2'
       },
       {
         title: 'Test3',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test3'
       },
       {
         title: 'Test4',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test4'
       },
       {
         title: 'Test5',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test5'
       },
       {
         title: 'Test6',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test6'
       },
       {
         title: 'Test7',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test7'
       },
       {
         title: 'Test8',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test8'
       },
       {
         title: 'Test9',
-        image: '/assets/basic.png',
+        image: Environment.publicPath + 'assets/basic.png',
         id: 'Test9'
       }
     );
