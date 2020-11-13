@@ -1,4 +1,4 @@
-package com.foxtrot3.trello.database;
+package com.foxtrot3.trello.database.hello;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,7 +1,7 @@
 package com.foxtrot3.trello.security;
 
-import com.foxtrot3.trello.database.User;
-import com.foxtrot3.trello.database.UserRepo;
+import com.foxtrot3.trello.database.user.User;
+import com.foxtrot3.trello.database.user.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;

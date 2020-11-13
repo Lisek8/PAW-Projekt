@@ -1,31 +1,29 @@
 package com.foxtrot3.trello;
 
-import com.foxtrot3.trello.database.HelloRepo;
+import com.foxtrot3.trello.database.board.Board;
+import com.foxtrot3.trello.database.board.BoardRepo;
+import com.foxtrot3.trello.database.board.UserBoard;
+import com.foxtrot3.trello.database.board.UserBoardRepo;
+import com.foxtrot3.trello.database.hello.HelloRepo;
 import com.foxtrot3.trello.database.RegisterForm;
-import com.foxtrot3.trello.database.User;
-import com.foxtrot3.trello.database.UserRepo;
+import com.foxtrot3.trello.database.user.User;
+import com.foxtrot3.trello.database.user.UserRepo;
 import com.foxtrot3.trello.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Optional;
+import java.util.List;
 
 
-@Controller
+@RestController
 @SpringBootApplication
 @RequestMapping("/rest-services")
 public class MainController extends SpringBootServletInitializer {
@@ -35,6 +33,10 @@ public class MainController extends SpringBootServletInitializer {
     UserRepo userRepo;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    BoardRepo boardRepo;
+    @Autowired
+    UserBoardRepo userBoardRepo;
 
 
     @GetMapping("/hello")
@@ -58,5 +60,37 @@ public class MainController extends SpringBootServletInitializer {
         userRepo.save(user);
     }
 
+    @GetMapping("/boards")
+    List<Board> getBoards(){
+        return boardRepo.findAll();
+
+    }
+
+    @GetMapping("/board")
+    Board getBoard(int id){
+        Board board = boardRepo.findById(id);
+        if(board==null){
+            throw new RuntimeException("Error 404, board not found.");
+        }else return board;
+    }
+
+    @PostMapping("/board")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void createBoard(String name, boolean isPrivate){
+        Board board = new Board(name,isPrivate);
+        boardRepo.save(board);
+        UserPrincipal principal = getPrincipal();
+        UserBoard userBoard = new UserBoard(principal.getId(), board.getId(), true);
+        userBoardRepo.save(userBoard);
+    }
+
+    public UserPrincipal getPrincipal() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserPrincipal)
+            return (((UserPrincipal) principal));
+        else
+            throw new RuntimeException("Wrong user type");
+
+    }
 
 }
