@@ -1,7 +1,7 @@
 package com.foxtrot3.trello.security;
 
 
-import com.foxtrot3.trello.database.User;
+import com.foxtrot3.trello.database.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

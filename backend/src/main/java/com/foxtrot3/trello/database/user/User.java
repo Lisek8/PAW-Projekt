@@ -1,4 +1,4 @@
-package com.foxtrot3.trello.database;
+package com.foxtrot3.trello.database.user;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
