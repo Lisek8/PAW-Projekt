@@ -1,0 +1,13 @@
+.add-list-button {
+  background-color: rgba(248, 249, 250, 0.4);
+  border-radius: 5px;
+  min-height: 32px;
+  height: auto;
+  width: 300px;
+  box-sizing: border-box;
+  transition: ease-out background-color 0.5s;
+}
+
+.add-list-button:hover {
+  background-color: rgba(248, 249, 250, 0.6);
+}
