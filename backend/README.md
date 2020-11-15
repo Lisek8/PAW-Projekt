@@ -62,3 +62,9 @@ Board
 ### /board(String name, boolean isPrivate) (Post)
 
 creates a new, empty board
+
+
+
+### /list(String name, int boardId) (Post)
+
+creates a new, empty list

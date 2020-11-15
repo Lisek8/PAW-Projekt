@@ -12,11 +12,17 @@ public class List {
     private String name;
     private int position;
     @Column(name="is_archived")
-    private boolean isArchived;
+    private boolean isArchived = false;
     @Column(name="board_id")
     private int boardId;
 
     public List() {
+    }
+
+    public List(String name, int position, int boardId) {
+        this.name = name;
+        this.position = position;
+        this.boardId = boardId;
     }
 
     public int getId() {

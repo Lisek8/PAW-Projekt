@@ -6,6 +6,7 @@ import com.foxtrot3.trello.database.board.UserBoard;
 import com.foxtrot3.trello.database.board.UserBoardRepo;
 import com.foxtrot3.trello.database.hello.HelloRepo;
 import com.foxtrot3.trello.database.RegisterForm;
+import com.foxtrot3.trello.database.list.ListRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
 import com.foxtrot3.trello.security.UserPrincipal;
@@ -37,6 +38,8 @@ public class MainController extends SpringBootServletInitializer {
     BoardRepo boardRepo;
     @Autowired
     UserBoardRepo userBoardRepo;
+    @Autowired
+    ListRepo listRepo;
 
 
     @GetMapping("/hello")
@@ -82,6 +85,15 @@ public class MainController extends SpringBootServletInitializer {
         UserPrincipal principal = getPrincipal();
         UserBoard userBoard = new UserBoard(principal.getId(), board.getId(), true);
         userBoardRepo.save(userBoard);
+    }
+
+    @PostMapping("/list")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void createList(String name, int boardId){
+        if(boardRepo.findById(boardId)==null)throw new RuntimeException("Board 404");
+        int listCount = listRepo.findAllByBoardId(boardId).size();
+        com.foxtrot3.trello.database.list.List list = new com.foxtrot3.trello.database.list.List(name, listCount+1, boardId);
+        listRepo.save(list);
     }
 
     public UserPrincipal getPrincipal() {
