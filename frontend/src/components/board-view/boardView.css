@@ -4,6 +4,7 @@
   min-height: 32px;
   height: fit-content;
   width: 275px;
+  min-width: 275px;
   box-sizing: border-box;
   transition: ease-out background-color 0.5s;
 }
@@ -21,16 +22,36 @@
   background-color: #bbbbbb;
 }
 
+.list-container {
+  overflow-x: auto;
+}
+
 .list {
   border-radius: 5px;
   min-height: 32px;
   height: fit-content;
   max-height: auto;
   width: 275px;
+  min-width: 275px;
   box-sizing: border-box;
   background-color: #dbdbdb;
 }
 
 .list-title {
   font-weight: 500;
+}
+
+.card-list-container {
+  overflow-y: auto;
+  max-height: 75vh;
+}
+
+.card-view {
+  background-color: #FFFFFF;
+  transition: ease-out background-color 0.5s;
+  border-radius: 5px;
+}
+
+.card-view:hover {
+  background-color: #e9e9e9;
 }
