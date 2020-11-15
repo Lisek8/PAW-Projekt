@@ -1,25 +1,21 @@
-import { defineComponent, Ref, ref } from 'vue';
+import { Options, Vue } from 'vue-class-component';
+import { Emit, Prop } from 'vue-property-decorator';
 
-export default defineComponent({
-  name: 'CardCreationModal',
-  props: {
-    isVisible: Boolean
-  },
+@Options({
   emits: [
     'update:isVisible',
     'update:cardName',
     'create-card'
-  ],
-  setup () {
-    const cardName: Ref<string> = ref('');
+  ]
+})
+export default class CardCreationModal extends Vue {
+  @Prop() isVisible = false;
+  cardName = '';
 
-    return { cardName };
-  },
-  methods: {
-    validateAndClose: function validateAndClose () {
-      this.$emit('update:isVisible', false);
-      this.$emit('create-card', this.cardName);
-      this.cardName = '';
-    }
+  @Emit('update:isVisible')
+  validateAndClose () {
+    this.$emit('create-card', this.cardName);
+    this.cardName = '';
+    return false;
   }
-});
+};
