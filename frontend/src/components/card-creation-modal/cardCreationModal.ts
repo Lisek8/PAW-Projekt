@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, InjectReactive } from 'vue-property-decorator';
 
 @Options({
   emits: [
@@ -9,7 +9,7 @@ import { Emit, Prop } from 'vue-property-decorator';
   ]
 })
 export default class CardCreationModal extends Vue {
-  @Prop() isVisible = false;
+  @InjectReactive() isVisible !: boolean;
   cardName = '';
 
   @Emit('update:isVisible')
