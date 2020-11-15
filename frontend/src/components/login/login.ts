@@ -1,17 +1,13 @@
 import { Ref, ref } from 'vue';
+import { Vue } from 'vue-class-component';
 
-export default {
-  name: 'Login',
-  setup () {
-    const loginFailure: Ref<boolean> = ref(false);
-    const loginName: Ref<string> = ref('');
-    const loginPassword: Ref<string> = ref('');
+export default class Login extends Vue {
+  loginFailure = false;
+  loginName = '';
+  loginPassword = '';
 
-    function changeStatus () {
-      // Implement proper login procedure here
-      loginFailure.value = !loginFailure.value;
-    }
-
-    return { loginFailure, loginName, loginPassword, changeStatus };
-  }
+  changeStatus () {
+    // Implement proper login procedure here
+    this.loginFailure = !this.loginFailure;
+  };
 };
