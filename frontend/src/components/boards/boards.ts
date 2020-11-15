@@ -1,15 +1,14 @@
-import { Ref, ref } from 'vue';
 import { Board } from '@/dataStructures/board';
 import { Environment } from './../../../env.config';
+import { Vue } from 'vue-class-component';
 
-export default {
-  name: 'Boards',
-  setup () {
-    const recentlyViewed: Ref<Board[]> = ref([]);
-    const privateBoards: Ref<Board[]> = ref([]);
+export default class Boards extends Vue {
+  public recentlyViewed: Board[] = [];
+  public privateBoards: Board[] = [];
 
+  mounted () {
     // Get them from backend
-    recentlyViewed.value.push(
+    this.recentlyViewed.push(
       {
         title: 'Test0',
         image: Environment.publicPath + 'assets/basic.png',
@@ -63,7 +62,7 @@ export default {
     );
 
     // Get them from backend
-    privateBoards.value.push(
+    this.privateBoards.push(
       {
         title: 'Test0',
         image: Environment.publicPath + 'assets/basic.png',
@@ -115,7 +114,5 @@ export default {
         id: 'Test9'
       }
     );
-
-    return { recentlyViewed, privateBoards };
-  }
+  };
 };

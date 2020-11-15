@@ -1,25 +1,21 @@
-import { defineComponent, Ref, ref } from 'vue';
+import { Options, Vue } from 'vue-class-component';
+import { Emit, InjectReactive } from 'vue-property-decorator';
 
-export default defineComponent({
-  name: 'BoardCreationModal',
-  props: {
-    isVisible: Boolean
-  },
+@Options({
   emits: [
     'update:isVisible',
     'update:boardName',
     'create-board'
-  ],
-  setup () {
-    const boardName: Ref<string> = ref('');
+  ]
+})
+export default class BoardCreationModal extends Vue {
+  @InjectReactive() isVisible = false;
+  public boardName = '';
 
-    return { boardName };
-  },
-  methods: {
-    validateAndClose: function validateAndClose () {
-      this.$emit('update:isVisible', false);
-      this.$emit('create-board', this.boardName);
-      this.boardName = '';
-    }
+  @Emit('update:isVisible')
+  validateAndClose () {
+    this.$emit('create-board', this.boardName);
+    this.boardName = '';
+    return false;
   }
-});
+};

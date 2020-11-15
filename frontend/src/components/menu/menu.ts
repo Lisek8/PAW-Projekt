@@ -1,30 +1,28 @@
 import router from '@/router';
-import { Ref, ref } from 'vue';
+import { Options, Vue } from 'vue-class-component';
+import { ProvideReactive } from 'vue-property-decorator';
 import BoardCreationModal from '../board-creation-modal/BoardCreationModal.vue';
 
-export default {
-  name: 'Menu',
+@Options({
   components: {
     BoardCreationModal
-  },
-  setup () {
-    const loggedIn: Ref<boolean> = ref(true);
-    const showModal: Ref<boolean> = ref(false);
-
-    function logout () {
-      // Implement proper logout procedure here
-      loggedIn.value = false;
-      router.push('/');
-    }
-
-    function openBoardCreationModal () {
-      showModal.value = true;
-    }
-
-    function handleBoardCreation (boardName: string) {
-      // Handle board creation here
-    }
-
-    return { loggedIn, logout, showModal, openBoardCreationModal, handleBoardCreation };
   }
+})
+export default class Menu extends Vue {
+  @ProvideReactive() showBoardCreationModal = false;
+  public loggedIn = true;
+
+  logout () {
+    // Implement proper logout procedure here
+    this.loggedIn = false;
+    router.push('/');
+  }
+
+  openBoardCreationModal () {
+    this.showBoardCreationModal = true;
+  }
+
+  handleBoardCreation (boardName: string) {
+    // Handle board creation here
+  };
 };

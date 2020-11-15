@@ -7,7 +7,7 @@
           {{ list.title }}
         </span>
         <div class="card-list-container">
-          <div class=" card-view p-2 mt-2" v-for="card in list.items" :key="card">
+          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card">
             {{ card.title }}
           </div>
         </div>
