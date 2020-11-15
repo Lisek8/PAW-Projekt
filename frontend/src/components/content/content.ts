@@ -1,19 +1,15 @@
 import axios from 'axios';
+import { Vue } from 'vue-class-component';
 import { Environment } from './../../../env.config.js';
 
-export default {
-  name: 'Content',
-  msg: '',
-  data () {
-    return {
-      msg: ''
-    };
-  },
+export default class Content extends Vue {
+  msg = '';
+
   created () {
     axios.get(Environment.restServices + 'hello')
-      .then(res => {
-        this.msg = res.data;
+      .then(response => {
+        this.msg = response.data;
       })
-      .catch(err => console.log(err));
-  }
+      .catch(error => console.error(error));
+  };
 };
