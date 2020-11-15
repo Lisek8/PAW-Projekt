@@ -2,12 +2,26 @@
   background-color: rgba(248, 249, 250, 0.4);
   border-radius: 5px;
   min-height: 32px;
-  height: auto;
-  width: 300px;
+  height: fit-content;
+  width: 275px;
   box-sizing: border-box;
   transition: ease-out background-color 0.5s;
 }
 
 .add-list-button:hover {
   background-color: rgba(248, 249, 250, 0.6);
+}
+
+.list {
+  border-radius: 5px;
+  min-height: 32px;
+  height: fit-content;
+  max-height: auto;
+  width: 275px;
+  box-sizing: border-box;
+  background-color: #dbdbdb;
+}
+
+.list-title {
+  font-weight: 500;
 }
