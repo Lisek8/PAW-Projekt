@@ -12,6 +12,15 @@
   background-color: rgba(248, 249, 250, 0.6);
 }
 
+.add-card-button {
+  transition: ease-out background-color 0.5s;
+  border-radius: 5px;
+}
+
+.add-card-button:hover {
+  background-color: #bbbbbb;
+}
+
 .list {
   border-radius: 5px;
   min-height: 32px;
