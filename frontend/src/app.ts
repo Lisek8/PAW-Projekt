@@ -10,4 +10,8 @@ import Login from './components/login/Login.vue';
     Login
   }
 })
-export default class App extends Vue {};
+export default class App extends Vue {
+  public matchesBoardPage () {
+    return this.$route.path.match('/board/.*') != null;
+  }
+};
