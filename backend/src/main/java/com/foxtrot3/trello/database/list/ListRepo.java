@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ListRepo extends JpaRepository<List,Integer> {
     List findById(int id);
-
+    java.util.List<List> findAllByBoardId(int boardId);
 }
