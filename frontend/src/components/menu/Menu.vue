@@ -44,7 +44,7 @@
       </template>
   </ul>
   </nav>
-  <BoardCreationModal v-model:isVisible="showModal" @create-board="handleBoardCreation"></BoardCreationModal>
+  <BoardCreationModal v-model:isVisible="showBoardCreationModal" @create-board="handleBoardCreation"></BoardCreationModal>
 </template>
 
 <script src="./menu"></script>

@@ -1,4 +1,3 @@
-import { defineComponent, Ref, ref } from 'vue';
 import { Options, Vue } from 'vue-class-component';
 import { Emit, InjectReactive } from 'vue-property-decorator';
 
@@ -11,7 +10,7 @@ import { Emit, InjectReactive } from 'vue-property-decorator';
 })
 export default class ListCreationModal extends Vue {
   @InjectReactive() isVisible !: boolean;
-  listName = '';
+  public listName = '';
 
   @Emit('update:isVisible')
   validateAndClose () {

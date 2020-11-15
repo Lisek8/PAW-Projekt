@@ -1,5 +1,6 @@
 import router from '@/router';
 import { Options, Vue } from 'vue-class-component';
+import { ProvideReactive } from 'vue-property-decorator';
 import BoardCreationModal from '../board-creation-modal/BoardCreationModal.vue';
 
 @Options({
@@ -8,8 +9,8 @@ import BoardCreationModal from '../board-creation-modal/BoardCreationModal.vue';
   }
 })
 export default class Menu extends Vue {
+  @ProvideReactive() showBoardCreationModal = false;
   public loggedIn = true;
-  public showModal = false;
 
   logout () {
     // Implement proper logout procedure here
@@ -18,7 +19,7 @@ export default class Menu extends Vue {
   }
 
   openBoardCreationModal () {
-    this.showModal = true;
+    this.showBoardCreationModal = true;
   }
 
   handleBoardCreation (boardName: string) {

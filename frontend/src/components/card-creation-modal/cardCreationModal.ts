@@ -10,7 +10,7 @@ import { Emit, InjectReactive } from 'vue-property-decorator';
 })
 export default class CardCreationModal extends Vue {
   @InjectReactive() isVisible !: boolean;
-  cardName = '';
+  public cardName = '';
 
   @Emit('update:isVisible')
   validateAndClose () {

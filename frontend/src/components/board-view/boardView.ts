@@ -14,7 +14,7 @@ import { ProvideReactive } from 'vue-property-decorator';
 export default class BoardView extends Vue {
   @ProvideReactive() showListCreationModal = false;
   @ProvideReactive() showCardCreationModal = false;
-  boardInfo: Board = {
+  public boardInfo: Board = {
     title: '',
     image: '',
     id: ''

@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component';
-import { Emit, Prop } from 'vue-property-decorator';
+import { Emit, InjectReactive } from 'vue-property-decorator';
 
 @Options({
   emits: [
@@ -9,8 +9,8 @@ import { Emit, Prop } from 'vue-property-decorator';
   ]
 })
 export default class BoardCreationModal extends Vue {
-  @Prop() isVisible = false;
-  boardName = '';
+  @InjectReactive() isVisible = false;
+  public boardName = '';
 
   @Emit('update:isVisible')
   validateAndClose () {

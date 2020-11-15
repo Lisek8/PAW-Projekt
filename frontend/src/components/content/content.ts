@@ -3,7 +3,7 @@ import { Vue } from 'vue-class-component';
 import { Environment } from './../../../env.config.js';
 
 export default class Content extends Vue {
-  msg = '';
+  public msg = '';
 
   created () {
     axios.get(Environment.restServices + 'hello')

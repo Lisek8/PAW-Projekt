@@ -1,11 +1,10 @@
-import { Ref, ref } from 'vue';
 import { Board } from '@/dataStructures/board';
 import { Environment } from './../../../env.config';
 import { Vue } from 'vue-class-component';
 
 export default class Boards extends Vue {
-  recentlyViewed: Board[] = [];
-  privateBoards: Board[] = [];
+  public recentlyViewed: Board[] = [];
+  public privateBoards: Board[] = [];
 
   mounted () {
     // Get them from backend

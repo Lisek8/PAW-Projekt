@@ -1,10 +1,9 @@
-import { Ref, ref } from 'vue';
 import { Vue } from 'vue-class-component';
 
 export default class Login extends Vue {
-  loginFailure = false;
-  loginName = '';
-  loginPassword = '';
+  public loginFailure = false;
+  public loginName = '';
+  public loginPassword = '';
 
   changeStatus () {
     // Implement proper login procedure here
