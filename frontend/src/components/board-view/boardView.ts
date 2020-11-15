@@ -537,12 +537,10 @@ export default class BoardView extends Vue {
   }
 
   handleListCreation (listName: string) {
-    console.log(listName);
     // Handle list creation here
   }
 
   handleCardCreation (cardName: string) {
-    console.log(cardName);
     // Handle card creation here
   }
 

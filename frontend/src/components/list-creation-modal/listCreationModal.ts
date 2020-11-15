@@ -1,25 +1,22 @@
 import { defineComponent, Ref, ref } from 'vue';
+import { Options, Vue } from 'vue-class-component';
+import { Emit, InjectReactive } from 'vue-property-decorator';
 
-export default defineComponent({
-  name: 'ListCreationModal',
-  props: {
-    isVisible: Boolean
-  },
+@Options({
   emits: [
     'update:isVisible',
     'update:listName',
     'create-list'
-  ],
-  setup () {
-    const listName: Ref<string> = ref('');
+  ]
+})
+export default class ListCreationModal extends Vue {
+  @InjectReactive() isVisible !: boolean;
+  listName = '';
 
-    return { listName };
-  },
-  methods: {
-    validateAndClose: function validateAndClose () {
-      this.$emit('update:isVisible', false);
-      this.$emit('create-list', this.listName);
-      this.listName = '';
-    }
-  }
-});
+  @Emit('update:isVisible')
+  validateAndClose () {
+    this.$emit('create-list', this.listName);
+    this.listName = '';
+    return false;
+  };
+};
