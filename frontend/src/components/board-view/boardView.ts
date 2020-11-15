@@ -14,7 +14,36 @@ export default defineComponent({
       this.boardInfo = {
         title: 'TEST',
         image: Environment.publicPath + 'assets/basic.png',
-        id: 'TEST'
+        id: 'TEST',
+        lists: [
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          },
+          {
+            title: 'Test list'
+          }
+        ]
       };
     },
     handleListCreation: function handleListCreation (listName: string) {
