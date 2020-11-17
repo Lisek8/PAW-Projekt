@@ -11,6 +11,10 @@ public class RegisterForm {
         this.name = name;
     }
 
+    public RegisterForm(){
+
+    }
+
     public String getEmail() {
         return email;
     }
