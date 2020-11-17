@@ -28,8 +28,15 @@ Use `runRestServices.bat` (**requires** war file to be built)
 
 
 
-### /login(String email, String password)  (Post)
+### /login  (Post)
 
+##### Request
+```
+{
+    "email": <string>,
+    "password": <string>
+}
+```
 
 ##### returns
 ```
