@@ -22,6 +22,7 @@ public class UserPrincipal implements UserDetails {
         return Collections.singleton(new SimpleGrantedAuthority(Roles.valueOf(user.getUserType().toUpperCase()).name()));
     }
 
+
     public String getName(){
         return user.getName();
     }

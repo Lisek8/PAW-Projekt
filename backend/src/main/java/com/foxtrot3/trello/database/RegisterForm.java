@@ -15,6 +15,7 @@ public class RegisterForm {
 
     }
 
+
     public String getEmail() {
         return email;
     }

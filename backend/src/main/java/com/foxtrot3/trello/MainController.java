@@ -9,12 +9,17 @@ import com.foxtrot3.trello.database.RegisterForm;
 import com.foxtrot3.trello.database.list.ListRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
+
 import com.foxtrot3.trello.security.*;
+
+import com.foxtrot3.trello.security.UserPrincipal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +28,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +54,14 @@ public class MainController extends SpringBootServletInitializer {
     UserBoardRepo userBoardRepo;
     @Autowired
     ListRepo listRepo;
+
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
     UserDetailsService userDetailsService;
     @Autowired
     JwtUtil jwtUtil;
+
 
     @GetMapping("/hello")
     @ResponseBody

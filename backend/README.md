@@ -28,6 +28,7 @@ Use `runRestServices.bat` (**requires** war file to be built)
 
 
 
+<<<<<<< HEAD
 ### /login  (Post)
 
 ##### Request
@@ -37,6 +38,10 @@ Use `runRestServices.bat` (**requires** war file to be built)
     "password": <string>
 }
 ```
+=======
+### /login(String email, String password)  (Post)
+
+>>>>>>> 39be406e909151da15ce10a33c36e172124643c6
 
 ##### returns
 ```
