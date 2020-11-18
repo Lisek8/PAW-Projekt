@@ -89,8 +89,17 @@ public class MainController extends SpringBootServletInitializer {
 
     @GetMapping("/boards")
     List<Board> getBoards(){
-        return boardRepo.findAll();
+        List<Board> boards = boardRepo.findAll();
+        for(Board board:boards){
+            board = setLists(board);
+        }
+        return boards;
+    }
 
+    Board setLists(Board board){
+        List<com.foxtrot3.trello.database.list.List>boardLists = listRepo.findAllByBoardId(board.getId());
+        board.setLists(boardLists);
+        return board;
     }
 
     @GetMapping("/board")
@@ -98,7 +107,9 @@ public class MainController extends SpringBootServletInitializer {
         Board board = boardRepo.findById(id);
         if(board==null){
             throw new RuntimeException("Error 404, board not found.");
-        }else return board;
+        }else {
+            return setLists(board);
+        }
     }
 
     @PostMapping("/board")
