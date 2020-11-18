@@ -2,8 +2,7 @@ package com.foxtrot3.trello.database.label;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "labels")
+
 public class Label {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

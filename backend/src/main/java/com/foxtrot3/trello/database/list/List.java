@@ -1,5 +1,8 @@
 package com.foxtrot3.trello.database.list;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.foxtrot3.trello.database.card.Card;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,7 +18,9 @@ public class List {
     private boolean isArchived = false;
     @Column(name="board_id")
     private int boardId;
-
+    @JsonInclude()
+    @Transient
+    private java.util.List<Card> cards;
     public List() {
     }
 
@@ -23,6 +28,14 @@ public class List {
         this.name = name;
         this.position = position;
         this.boardId = boardId;
+    }
+
+    public java.util.List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(java.util.List<Card> cards) {
+        this.cards = cards;
     }
 
     public int getId() {
