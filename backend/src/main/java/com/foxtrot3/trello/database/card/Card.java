@@ -1,11 +1,14 @@
 package com.foxtrot3.trello.database.card;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
 @Table(name="cards")
 public class Card {
+    @Transient
+    private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -13,15 +16,22 @@ public class Card {
     private String description;
     private int position;
     @Column(name="is_archived")
-    private boolean isArchived;
+    private boolean isArchived = false;
     @Column(columnDefinition = "DATE")
     private Date deadline;
     @Column(columnDefinition = "DATE", name="create_date")
     private Date createDate;
-    @Column(name="label_id")
-    private int labelId;
+    @Column(name="list_id")
+    private int listId;
 
     public Card() {
+    }
+
+    public Card(String name, int position, int listId){
+        this.name=name;
+        this.position=position;
+        this.listId = listId;
+        createDate = new Date();
     }
 
     public int getId() {
@@ -80,11 +90,11 @@ public class Card {
         this.createDate = createDate;
     }
 
-    public int getLabelId() {
-        return labelId;
+    public int getListId() {
+        return listId;
     }
 
-    public void setLabelId(int labelId) {
-        this.labelId = labelId;
+    public void setListId(int labelId) {
+        this.listId = labelId;
     }
 }

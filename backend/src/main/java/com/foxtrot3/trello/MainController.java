@@ -1,18 +1,21 @@
 package com.foxtrot3.trello;
 
+import com.foxtrot3.trello.database.json.CardForm;
 import com.foxtrot3.trello.database.board.Board;
 import com.foxtrot3.trello.database.board.BoardRepo;
 import com.foxtrot3.trello.database.board.UserBoard;
 import com.foxtrot3.trello.database.board.UserBoardRepo;
+import com.foxtrot3.trello.database.card.Card;
+import com.foxtrot3.trello.database.card.CardRepo;
 import com.foxtrot3.trello.database.hello.HelloRepo;
-import com.foxtrot3.trello.database.RegisterForm;
+import com.foxtrot3.trello.database.json.ListForm;
+import com.foxtrot3.trello.database.json.RegisterForm;
 import com.foxtrot3.trello.database.list.ListRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
 import com.foxtrot3.trello.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +54,8 @@ public class MainController extends SpringBootServletInitializer {
     UserDetailsService userDetailsService;
     @Autowired
     JwtUtil jwtUtil;
+    @Autowired
+    CardRepo cardRepo;
 
     @GetMapping("/hello")
     @ResponseBody
@@ -96,11 +100,7 @@ public class MainController extends SpringBootServletInitializer {
         return boards;
     }
 
-    Board setLists(Board board){
-        List<com.foxtrot3.trello.database.list.List>boardLists = listRepo.findAllByBoardId(board.getId());
-        board.setLists(boardLists);
-        return board;
-    }
+
 
     @GetMapping("/board")
     Board getBoard(int id){
@@ -124,12 +124,38 @@ public class MainController extends SpringBootServletInitializer {
 
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    void createList(String name, int boardId){
-        if(boardRepo.findById(boardId)==null)throw new RuntimeException("Board 404");
-        int listCount = listRepo.findAllByBoardId(boardId).size();
-        com.foxtrot3.trello.database.list.List list = new com.foxtrot3.trello.database.list.List(name, listCount+1, boardId);
+    void createList(@RequestBody ListForm listForm){
+        if(boardRepo.findById(listForm.getBoardId())==null)throw new RuntimeException("Board 404");
+        int listCount = listRepo.findAllByBoardId(listForm.getBoardId()).size();
+        com.foxtrot3.trello.database.list.List list = new com.foxtrot3.trello.database.list.List(listForm.getName(), listCount+1, listForm.getBoardId());
+        list = setCards(list);
         listRepo.save(list);
     }
+
+    com.foxtrot3.trello.database.list.List setCards(com.foxtrot3.trello.database.list.List list){
+        List<Card>listCards = cardRepo.findAllByListId(list.getId());
+        list.setCards(listCards);
+        return list;
+    }
+
+    Board setLists(Board board){
+        List<com.foxtrot3.trello.database.list.List>boardLists = listRepo.findAllByBoardId(board.getId());
+        for(com.foxtrot3.trello.database.list.List list:boardLists){
+            list=setCards(list);
+        }
+        board.setLists(boardLists);
+        return board;
+    }
+
+    @PostMapping("/card")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void createCard(@RequestBody CardForm cardForm){
+        if(listRepo.findById(cardForm.getListId())==null)throw new RuntimeException("List 404");
+        int cardCount = cardRepo.findAllByListId(cardForm.getListId()).size();
+        Card card = new Card(cardForm.getName(), cardCount+1, cardForm.getListId());
+        cardRepo.save(card);
+    }
+
 
     public UserPrincipal getPrincipal() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
