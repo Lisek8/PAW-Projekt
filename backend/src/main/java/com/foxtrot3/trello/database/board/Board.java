@@ -1,5 +1,8 @@
 package com.foxtrot3.trello.database.board;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.foxtrot3.trello.database.list.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,8 +18,17 @@ public class Board {
     @Column(name="is_private")
     private boolean isPrivate;
     private String link;
+    @JsonInclude()
+    @Transient
+    private java.util.List<List> lists;
 
+    public java.util.List<List> getLists() {
+        return lists;
+    }
 
+    public void setLists(java.util.List<List> lists) {
+        this.lists = lists;
+    }
 
     public Board() {
     }

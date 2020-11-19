@@ -25,7 +25,7 @@
         Prywatne
       </h4>
       <div class="d-flex flex-wrap bd-highlight mb-3 boardBox">
-         <router-link :to="'/board/' + board.id" class="p-2 boardPreview mr-2 mb-2" :style="{ backgroundImage: 'url(' + board.image + ')' }" v-for="board in privateBoards" :key="board.title">
+         <router-link :to="{ name: 'Board', params: { boardId: board.id }  }" class="p-2 boardPreview mr-2 mb-2" :style="{ backgroundImage: 'url(' + board.image + ')' }" v-for="board in privateBoards" :key="board.title">
           <div class="boardTitle">
             {{ board.title }}
           </div>

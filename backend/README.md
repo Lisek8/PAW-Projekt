@@ -28,8 +28,15 @@ Use `runRestServices.bat` (**requires** war file to be built)
 
 
 
-### /login(String email, String password)  (Post)
+### /login  (Post)
 
+##### Request
+```
+{
+    "email": <string>,
+    "password": <string>
+}
+```
 
 ##### returns
 ```
@@ -65,6 +72,29 @@ creates a new, empty board
 
 
 
-### /list(String name, int boardId) (Post)
+### /list() (Post)
+
+##### Request
+```
+{
+    "name": <string>,
+    "boardId": <int>
+}
+```
+
 
 creates a new, empty list
+
+
+### /card() (Post)
+
+##### Request
+```
+{
+    "name": <string>,
+    "listId": <int>
+}
+```
+
+
+creates a new, empty card

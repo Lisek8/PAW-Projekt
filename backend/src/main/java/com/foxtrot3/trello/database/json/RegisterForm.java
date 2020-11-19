@@ -1,4 +1,4 @@
-package com.foxtrot3.trello.database;
+package com.foxtrot3.trello.database.json;
 
 public class RegisterForm {
     String email;
@@ -9,6 +9,10 @@ public class RegisterForm {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public RegisterForm(){
+
     }
 
     public String getEmail() {

@@ -2,6 +2,8 @@ import router from '@/router';
 import { Options, Vue } from 'vue-class-component';
 import { ProvideReactive } from 'vue-property-decorator';
 import BoardCreationModal from '../board-creation-modal/BoardCreationModal.vue';
+import axios from 'axios';
+import { Environment } from './../../../env.config';
 
 @Options({
   components: {
@@ -10,11 +12,20 @@ import BoardCreationModal from '../board-creation-modal/BoardCreationModal.vue';
 })
 export default class Menu extends Vue {
   @ProvideReactive() showBoardCreationModal = false;
-  public loggedIn = true;
+  public loggedIn = localStorage.getItem('loggedIn') === 'true';
+  public config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    }
+  };
 
   logout () {
-    // Implement proper logout procedure here
+    axios.get(Environment.restServices + 'logout', this.config)
+      .then(res => {
+        this.loggedIn = false;
+      });
     this.loggedIn = false;
+    localStorage.setItem('loggedIn', 'false');
     router.push('/');
   }
 
@@ -23,6 +34,13 @@ export default class Menu extends Vue {
   }
 
   handleBoardCreation (boardName: string) {
-    // Handle board creation here
-  };
+    const requestBody = {
+      name: boardName,
+      isPrivate: true
+    };
+    axios.post(Environment.restServices + 'board?name=' + boardName + '&' + 'isPrivate=' + 'true', requestBody, this.config)
+      .then(res => {
+        router.push('/boards');
+      });
+  }
 };
