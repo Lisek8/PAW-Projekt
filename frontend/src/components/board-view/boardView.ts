@@ -3,7 +3,9 @@ import { Environment } from './../../../env.config';
 import ListCreationModal from '../list-creation-modal/ListCreationModal.vue';
 import CardCreationModal from '../card-creation-modal/CardCreationModal.vue';
 import { Options, Vue } from 'vue-class-component';
-import { ProvideReactive } from 'vue-property-decorator';
+import { Prop, ProvideReactive } from 'vue-property-decorator';
+import axios from 'axios';
+import router from '@/router';
 
 @Options({
   components: {
@@ -20,535 +22,88 @@ export default class BoardView extends Vue {
     id: ''
   };
 
+  public clickedListId = 0;
+
+  @Prop()
+  boardId: string | undefined | number
+
+  public items = [
+    {
+      title: 'Card 1',
+      description: '',
+      id: ''
+    },
+    {
+      title: 'Card 2',
+      description: '',
+      id: ''
+    }
+  ]
+
+  public config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    }
+  };
+
   mounted () {
-    // Get this from backend
     this.getBoardInfo();
   }
 
   getBoardInfo () {
-    // Get this from backend
-    this.boardInfo = {
-      title: 'TEST',
-      image: Environment.publicPath + 'assets/basic.png',
-      id: 'TEST',
-      lists: [
-        {
-          title: 'Test list1',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list2',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list3',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list4',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list5',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list6',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list7',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list8',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
-        },
-        {
-          title: 'Test list9',
-          items: [
-            {
-              title: 'Card 1',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 2',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 3',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 4',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 5',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 6',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 7',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 8',
-              description: '',
-              id: ''
-            },
-            {
-              title: 'Card 9',
-              description: '',
-              id: ''
-            }
-          ]
+    axios.get(Environment.restServices + 'board?id=' + this.boardId, this.config)
+      .then(res => {
+        const lists2 = [];
+        for (let i = 0; i < res.data.lists.length; i++) {
+          const items2 = [];
+          for (let j = 0; j < res.data.lists[i].cards.length; j++) {
+            const item = {
+              title: res.data.lists[i].cards[j].name,
+              description: res.data.lists[i].cards[j].description,
+              id: res.data.lists[i].cards[j].id
+            };
+            items2.push(item);
+          }
+          const list = {
+            id: res.data.lists[i].id,
+            title: res.data.lists[i].name,
+            items: items2
+          };
+          lists2.push(list);
         }
-      ]
-    };
+        this.boardInfo = {
+          title: res.data.name,
+          image: Environment.publicPath + 'assets/basic.png',
+          id: res.data.id,
+          lists: lists2
+        };
+      });
   }
 
   handleListCreation (listName: string) {
-    // Handle list creation here
+    const requestBody = {
+      name: listName,
+      boardId: this.boardId
+    };
+    axios.post(Environment.restServices + 'list', requestBody, this.config)
+      .then(() => this.getBoardInfo());
   }
 
   handleCardCreation (cardName: string) {
-    // Handle card creation here
+    const requestBody = {
+      name: cardName,
+      listId: this.clickedListId
+    };
+    axios.post(Environment.restServices + 'card', requestBody, this.config)
+      .then(() => this.getBoardInfo());
   }
 
   openListCreationModal () {
     this.showListCreationModal = true;
   }
 
-  openCardCreationModal () {
+  openCardCreationModal (id: number) {
+    this.clickedListId = id;
     this.showCardCreationModal = true;
   }
 };
