@@ -16,7 +16,6 @@ export default class Login extends Vue {
     };
     axios.post(Environment.restServices + 'login', requestBody)
       .then(res => {
-        debugger;
         localStorage.setItem('jwt', res.data.jwt);
         localStorage.setItem('loggedIn', 'true');
         window.location.reload();
