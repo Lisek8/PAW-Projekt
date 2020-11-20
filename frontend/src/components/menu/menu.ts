@@ -21,7 +21,7 @@ export default class Menu extends Vue {
 
   logout () {
     axios.get(Environment.restServices + 'logout', this.config)
-      .then(res => {
+      .then(() => {
         this.loggedIn = false;
       });
     this.loggedIn = false;
@@ -39,7 +39,7 @@ export default class Menu extends Vue {
       isPrivate: true
     };
     axios.post(Environment.restServices + 'board?name=' + boardName + '&' + 'isPrivate=' + 'true', requestBody, this.config)
-      .then(res => {
+      .then(() => {
         router.push('/boards');
       });
   }

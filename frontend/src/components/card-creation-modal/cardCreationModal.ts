@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component';
-import { Emit, InjectReactive, Prop } from 'vue-property-decorator';
+import { Emit, InjectReactive } from 'vue-property-decorator';
 
 @Options({
   emits: [
