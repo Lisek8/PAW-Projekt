@@ -3,7 +3,7 @@ import { Environment } from './../../../env.config';
 import ListCreationModal from '../list-creation-modal/ListCreationModal.vue';
 import CardCreationModal from '../card-creation-modal/CardCreationModal.vue';
 import { Options, Vue } from 'vue-class-component';
-import { Prop, ProvideReactive, Watch } from 'vue-property-decorator';
+import { Prop, ProvideReactive } from 'vue-property-decorator';
 import CardView from '../card-view/CardView.vue';
 import axios from 'axios';
 import { Card } from '@/dataStructures/card';
