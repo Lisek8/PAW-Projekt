@@ -1,8 +1,7 @@
 import { Environment } from './../../../env.config.js';
-import { Options, Vue } from 'vue-class-component';
+import { Vue } from 'vue-class-component';
 import axios from 'axios';
 import router from '@/router';
-import { vModelCheckbox } from 'vue';
 
 export default class Login extends Vue {
   public loginFailure = false;
