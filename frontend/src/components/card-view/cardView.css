@@ -1,0 +1,13 @@
+.no-resize {
+  resize: none;
+}
+
+.description {
+  background-color:  rgba(87, 87, 87, 0.08);
+  min-height: 40px;
+  border-radius: 5px;
+}
+
+.description:hover {
+  background-color:  rgba(77, 77, 77, 0.2);
+}
