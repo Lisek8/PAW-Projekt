@@ -7,6 +7,10 @@
   min-width: 275px;
   box-sizing: border-box;
   transition: ease-out background-color 0.5s;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .add-list-button:hover {
@@ -16,10 +20,32 @@
 .add-card-button {
   transition: ease-out background-color 0.5s;
   border-radius: 5px;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
 }
 
 .add-card-button:hover {
   background-color: #bbbbbb;
+}
+
+.visibility-toggle-button {
+  background-color: rgba(248, 249, 250, 0.4);
+  border-radius: 5px;
+  min-height: 32px;
+  height: 38px;
+  min-width: 50px;
+  box-sizing: border-box;
+  transition: ease-out background-color 0.5s;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.visibility-toggle-button:hover {
+  background-color: rgba(248, 249, 250, 0.6);
 }
 
 .list-container {
@@ -54,4 +80,12 @@
 
 .card-view:hover {
   background-color: #e9e9e9;
+}
+
+.horizontal-divider {
+  width: 0;
+  margin: 0 .5rem;
+  height: 25px;
+  overflow: hidden;
+  border-left: 1px solid #5c5c5c;
 }

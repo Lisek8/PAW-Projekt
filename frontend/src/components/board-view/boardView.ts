@@ -1,11 +1,10 @@
-import { Board } from '@/dataStructures/board';
+import { Board, BoardVisibility } from '@/dataStructures/board';
 import { Environment } from './../../../env.config';
 import ListCreationModal from '../list-creation-modal/ListCreationModal.vue';
 import CardCreationModal from '../card-creation-modal/CardCreationModal.vue';
 import { Options, Vue } from 'vue-class-component';
 import { Prop, ProvideReactive } from 'vue-property-decorator';
 import axios from 'axios';
-import router from '@/router';
 
 @Options({
   components: {
@@ -16,6 +15,8 @@ import router from '@/router';
 export default class BoardView extends Vue {
   @ProvideReactive() showListCreationModal = false;
   @ProvideReactive() showCardCreationModal = false;
+  @Prop() boardId: string | undefined;
+
   public boardInfo: Board = {
     title: '',
     image: '',
@@ -23,27 +24,13 @@ export default class BoardView extends Vue {
   };
 
   public clickedListId = 0;
-
-  @Prop()
-  boardId: string | undefined | number
-
-  public items = [
-    {
-      title: 'Card 1',
-      description: '',
-      id: ''
-    },
-    {
-      title: 'Card 2',
-      description: '',
-      id: ''
-    }
-  ]
+  public possibleVisibilities = BoardVisibility;
 
   public config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('jwt')
-    }
+    },
+    params: {}
   };
 
   mounted () {
@@ -51,32 +38,34 @@ export default class BoardView extends Vue {
   }
 
   getBoardInfo () {
-    axios.get(Environment.restServices + 'board?id=' + this.boardId, this.config)
+    this.config.params = {
+      id: this.boardId
+    };
+    axios.get(Environment.restServices + 'board', this.config)
       .then(res => {
-        const lists2 = [];
-        for (let i = 0; i < res.data.lists.length; i++) {
-          const items2 = [];
-          for (let j = 0; j < res.data.lists[i].cards.length; j++) {
-            const item = {
-              title: res.data.lists[i].cards[j].name,
-              description: res.data.lists[i].cards[j].description,
-              id: res.data.lists[i].cards[j].id
-            };
-            items2.push(item);
-          }
-          const list = {
-            id: res.data.lists[i].id,
-            title: res.data.lists[i].name,
-            items: items2
-          };
-          lists2.push(list);
-        }
         this.boardInfo = {
           title: res.data.name,
           image: Environment.publicPath + 'assets/basic.png',
           id: res.data.id,
-          lists: lists2
+          lists: [],
+          visibility: BoardVisibility.Public
         };
+        for (const listData of res.data.lists) {
+          const items = [];
+          for (const card of listData.cards) {
+            items.push({
+              title: card.name,
+              description: card.description,
+              id: card.id
+            });
+          }
+          const list = {
+            id: listData.id,
+            title: listData.name,
+            items: items
+          };
+          this.boardInfo.lists != null ? this.boardInfo.lists.push(list) : this.boardInfo.lists = [list];
+        }
       });
   }
 
@@ -105,5 +94,21 @@ export default class BoardView extends Vue {
   openCardCreationModal (id: number) {
     this.clickedListId = id;
     this.showCardCreationModal = true;
+  }
+
+  toggleBoardVisibility () {
+    // Send request to restAPI to change visibility
+    // If successfull request again board data or only visibility depending on the implementation in rest api
+    // Delete following once implemented
+    switch (this.boardInfo.visibility) {
+      case BoardVisibility.Private:
+        this.boardInfo.visibility = BoardVisibility.Public;
+        break;
+      case BoardVisibility.Public:
+        this.boardInfo.visibility = BoardVisibility.Private;
+        break;
+      default:
+        break;
+    }
   }
 };

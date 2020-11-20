@@ -5,7 +5,6 @@ import Boards from '../components/boards/Boards.vue';
 import BoardView from '../components/board-view/BoardView.vue';
 
 function guardMyroute (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
-  console.log(localStorage.getItem('loggedIn'));
   let isAuthenticated = false;
   if (localStorage.getItem('loggedIn') === 'true') {
     isAuthenticated = true;
