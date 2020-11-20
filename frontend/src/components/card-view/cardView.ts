@@ -10,11 +10,25 @@ import { Emit, InjectReactive } from 'vue-property-decorator';
 })
 export default class CardView extends Vue {
   @InjectReactive() card !: Card;
+  public editingDescription = false;
+  public editableDescription = '';
 
   @Emit('card-update')
   updateCard () {
     // Communicate with rest api
     // Execute following code only if request was successfull if not display error message
     this.$emit('update:card', this.card);
+  }
+
+  enableDescriptionEditing () {
+    this.editableDescription = this.card.description;
+    this.editingDescription = true;
+  }
+
+  disableDescriptionEditing (save: boolean) {
+    if (save) {
+      this.card.description = this.editableDescription;
+    }
+    this.editingDescription = false;
   }
 };
