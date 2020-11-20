@@ -20,7 +20,7 @@
           {{ list.title }}
         </span>
         <div class="card-list-container">
-          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card">
+          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card" @click="openCardView(card.id)" data-toggle="modal" data-target="#cardViewModal">
             {{ card.title }}
           </div>
         </div>
@@ -43,8 +43,9 @@
       </div>
     </div>
   </div>
-  <ListCreationModal v-model:isVisible="showListCreationModal" @create-list="handleListCreation"></ListCreationModal>
-  <CardCreationModal v-model:isVisible="showCardCreationModal" @create-card="handleCardCreation"></CardCreationModal>
+  <ListCreationModal @create-list="handleListCreation"></ListCreationModal>
+  <CardCreationModal @create-card="handleCardCreation"></CardCreationModal>
+  <CardView v-model:cardinfo="card" @card-update="handleCardUpdate"></CardView>
 
 </template>
 
