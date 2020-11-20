@@ -1,5 +1,5 @@
 import { Options, Vue } from 'vue-class-component';
-import { Emit, InjectReactive } from 'vue-property-decorator';
+import { Emit } from 'vue-property-decorator';
 
 @Options({
   emits: [
@@ -9,7 +9,6 @@ import { Emit, InjectReactive } from 'vue-property-decorator';
   ]
 })
 export default class ListCreationModal extends Vue {
-  @InjectReactive() isVisible !: boolean;
   public listName = '';
 
   @Emit('update:isVisible')

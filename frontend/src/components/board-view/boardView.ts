@@ -4,18 +4,24 @@ import ListCreationModal from '../list-creation-modal/ListCreationModal.vue';
 import CardCreationModal from '../card-creation-modal/CardCreationModal.vue';
 import { Options, Vue } from 'vue-class-component';
 import { Prop, ProvideReactive } from 'vue-property-decorator';
+import CardView from '../card-view/CardView.vue';
 import axios from 'axios';
+import { Card } from '@/dataStructures/card';
 
 @Options({
   components: {
     ListCreationModal,
-    CardCreationModal
+    CardCreationModal,
+    CardView
   }
 })
 export default class BoardView extends Vue {
-  @ProvideReactive() showListCreationModal = false;
-  @ProvideReactive() showCardCreationModal = false;
-  @Prop() boardId: string | undefined;
+  @Prop() boardId!: string;
+  @ProvideReactive() card: Card = {
+    title: '',
+    description: '',
+    id: ''
+  };
 
   public boardInfo: Board = {
     title: '',
@@ -87,13 +93,8 @@ export default class BoardView extends Vue {
       .then(() => this.getBoardInfo());
   }
 
-  openListCreationModal () {
-    this.showListCreationModal = true;
-  }
-
   openCardCreationModal (id: number) {
     this.clickedListId = id;
-    this.showCardCreationModal = true;
   }
 
   toggleBoardVisibility () {
@@ -110,5 +111,18 @@ export default class BoardView extends Vue {
       default:
         break;
     }
+  }
+
+  openCardView (id: number) {
+    // Get card info by id from rest api or extract it from table info
+    this.card = {
+      title: 'Example title',
+      description: 'Example description',
+      id: id.toString()
+    };
+  }
+
+  handleCardUpdate () {
+    // Update card info in card lists
   }
 };
