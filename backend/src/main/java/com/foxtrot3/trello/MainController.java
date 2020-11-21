@@ -1,5 +1,7 @@
 package com.foxtrot3.trello;
 
+import com.foxtrot3.trello.database.card.UserCard;
+import com.foxtrot3.trello.database.card.UserCardRepo;
 import com.foxtrot3.trello.database.json.CardForm;
 import com.foxtrot3.trello.database.board.Board;
 import com.foxtrot3.trello.database.board.BoardRepo;
@@ -30,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,8 @@ public class MainController extends SpringBootServletInitializer {
     JwtUtil jwtUtil;
     @Autowired
     CardRepo cardRepo;
+    @Autowired
+    UserCardRepo userCardRepo;
 
     @GetMapping("/hello")
     @ResponseBody
@@ -100,7 +105,9 @@ public class MainController extends SpringBootServletInitializer {
         List<UserBoard> userBoards = userBoardRepo.findAllByUserId(userPrincipal.getId());
         List<Board> boards = new ArrayList<>();
         for(UserBoard board : userBoards){
-            boards.add(boardRepo.findById(board.getBoardId()));
+            Board foundBoard = boardRepo.findById(board.getBoardId());
+            foundBoard = setLists(foundBoard);
+            if(!foundBoard.isArchived())boards.add(foundBoard);
         }
         return boards;
     }
@@ -110,7 +117,7 @@ public class MainController extends SpringBootServletInitializer {
     void setBoardPrivacy(int id, boolean makePrivate){
         UserPrincipal userPrincipal = getPrincipal();
         UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
-        if (userBoard != null){
+        if (userBoard != null&&userBoard.isAdmin()){
             Board board = boardRepo.findById(userBoard.getBoardId());
             board.setPrivate(makePrivate);
             boardRepo.save(board);
@@ -120,8 +127,20 @@ public class MainController extends SpringBootServletInitializer {
         }
     }
 
-
-
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PutMapping("/boardArchive")
+    void setBoardArchivisation(int id, boolean makeArchived){
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
+        if (userBoard != null&&userBoard.isAdmin()){
+            Board board = boardRepo.findById(userBoard.getBoardId());
+            board.setArchived(makeArchived);
+            boardRepo.save(board);
+        }
+        else {
+            throw new RuntimeException("Error 404, board not found.");
+        }
+    }
 
     @GetMapping("/board")
     Board getBoard(int id, HttpServletResponse response){
@@ -131,12 +150,19 @@ public class MainController extends SpringBootServletInitializer {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             throw new RuntimeException("Can't access the board");
         }
-        else if(!board.isPrivate()) return board;
+        else if(!board.isPrivate()){
+            board = setLists(board);
+            return board;
+        }
         else {
             UserPrincipal userPrincipal = getPrincipal();
             if (userPrincipal != null) {
                 UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
-                if (userBoard != null) return boardRepo.findById(userBoard.getBoardId());
+                if (userBoard != null) {
+                    Board b =boardRepo.findById(userBoard.getBoardId());
+                    b=setLists(b);
+                    return b;
+                }
                 else {
                     throw new RuntimeException("Error 404, board not found.");
                 }
@@ -155,6 +181,31 @@ public class MainController extends SpringBootServletInitializer {
         UserPrincipal principal = getPrincipal();
         UserBoard userBoard = new UserBoard(principal.getId(), board.getId(), true);
         userBoardRepo.save(userBoard);
+    }
+
+    @DeleteMapping("/board")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteBoard(int id){
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
+        if (userBoard != null&&userBoard.isAdmin()){
+            Board board = boardRepo.findById(userBoard.getBoardId());
+            if(!board.isArchived())throw new RuntimeException("Can't delete a non-archived board");
+            userBoardRepo.deleteAllByBoardId(id);
+            List<com.foxtrot3.trello.database.list.List>lists = listRepo.findAllByBoardId(id);
+            for(com.foxtrot3.trello.database.list.List list:lists){
+                List<Card>cardList = cardRepo.findAllByListId(list.getId());
+                for(Card card:cardList){
+                    userCardRepo.deleteAllByCardId(card.getId());
+                }
+                cardRepo.deleteAllByListId(list.getId());
+            }
+            listRepo.deleteAllByBoardId(id);
+            boardRepo.delete(board);
+        }
+        else {
+            throw new RuntimeException("Error 404, board not found.");
+        }
     }
 
     @PostMapping("/list")

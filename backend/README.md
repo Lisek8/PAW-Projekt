@@ -103,4 +103,11 @@ creates a new, empty card
 
 ### /boardPrivacy(int id, boolean makePrivate) (Put)
 
-sets board isPrivate field to requested status
+sets board isPrivate field to requested status. Current user has to be admin of the board.
+
+
+
+### /boardArchive(int id, boolean makeArchived) (Put)
+
+sets board isArchived field to requested status. Current user has to be admin of the board.
+
