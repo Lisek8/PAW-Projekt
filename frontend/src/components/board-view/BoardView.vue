@@ -1,7 +1,10 @@
 <template>
   <div class="container-fluid h-100 text-light pt-3 pl-3 pr-3 d-flex flex-column" :style="{ backgroundImage: 'url(' + boardInfo.image + ')' }">
     <div class="d-flex flex-row align-items-center mb-2">
-      <h2>{{ boardInfo.title }}</h2>
+      <div>
+        <input v-if="titleEditing" v-model="editableTitle" @blur="endTitleEditing()" @keyup.enter="endTitleEditing()" v-focus>
+        <h2 v-else @click="startTitleEditing()">{{ boardInfo.title }}</h2>
+      </div>
       <div class="horizontal-divider"></div>
       <div class="visibility-toggle-button p-2" @click="toggleBoardVisibility">
         <svg v-if="boardInfo.visibility === possibleVisibilities.Private" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -17,7 +20,8 @@
     <div class="d-flex flex-row flex-nowrap list-container flex-grow-1">
       <div class="p-2 mr-3 mb-3 list text-dark" v-for="list in boardInfo.lists" :key="list">
         <span class="list-title">
-          {{ list.title }}
+          <input v-if="listEditing[list.id.toString()]" v-model="editableListTitle" @blur="endListEditing(list.id)" @keyup.enter="endListEditing(list.id)" v-focus>
+          <span v-else @click="startListEditing(list.id)">{{ list.title }}</span>
         </span>
         <div class="card-list-container">
           <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card" @click="openCardView(card.id)" data-toggle="modal" data-target="#cardViewModal">

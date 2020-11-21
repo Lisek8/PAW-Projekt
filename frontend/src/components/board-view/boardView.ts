@@ -13,6 +13,13 @@ import { Card } from '@/dataStructures/card';
     ListCreationModal,
     CardCreationModal,
     CardView
+  },
+  directives: {
+    focus: {
+      mounted (element: HTMLElement) {
+        element.focus();
+      }
+    }
   }
 })
 export default class BoardView extends Vue {
@@ -31,6 +38,10 @@ export default class BoardView extends Vue {
 
   public clickedListId = 0;
   public possibleVisibilities = BoardVisibility;
+  public titleEditing = false;
+  public editableTitle = '';
+  public listEditing: Record<string, boolean> = {};
+  public editableListTitle = '';
 
   public config = {
     headers: {
@@ -124,5 +135,34 @@ export default class BoardView extends Vue {
 
   handleCardUpdate () {
     // Update card info in card lists
+  }
+
+  startTitleEditing () {
+    this.titleEditing = true;
+    this.editableTitle = this.boardInfo.title;
+  }
+
+  endTitleEditing () {
+    this.titleEditing = false;
+    // Only do following if update in rest api was successfull
+    this.boardInfo.title = this.editableTitle;
+  }
+
+  startListEditing (listToEdit: number) {
+    const foundList = this.boardInfo.lists?.find(list => list.id === listToEdit);
+    if (foundList != null) {
+      this.listEditing[foundList.id.toString()] = true;
+      // Only do following if update in rest api was successfull
+      this.editableListTitle = foundList.title;
+    }
+  }
+
+  endListEditing (listToEdit: number) {
+    const foundList = this.boardInfo.lists?.find(list => list.id === listToEdit);
+    if (foundList != null) {
+      this.listEditing[foundList.id.toString()] = false;
+      // Only do following if update in rest api was successfull
+      foundList.title = this.editableListTitle;
+    }
   }
 };
