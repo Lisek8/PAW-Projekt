@@ -98,3 +98,9 @@ creates a new, empty list
 
 
 creates a new, empty card
+
+
+
+### /boardPrivacy(int id, boolean makePrivate) (Put)
+
+sets board isPrivate field to requested status

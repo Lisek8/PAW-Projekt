@@ -29,6 +29,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -91,24 +93,57 @@ public class MainController extends SpringBootServletInitializer {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @GetMapping("/boards")
     List<Board> getBoards(){
-        List<Board> boards = boardRepo.findAll();
-        for(Board board:boards){
-            board = setLists(board);
+        UserPrincipal userPrincipal = getPrincipal();
+        List<UserBoard> userBoards = userBoardRepo.findAllByUserId(userPrincipal.getId());
+        List<Board> boards = new ArrayList<>();
+        for(UserBoard board : userBoards){
+            boards.add(boardRepo.findById(board.getBoardId()));
         }
         return boards;
     }
 
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @PutMapping("/boardPrivacy")
+    void setBoardPrivacy(int id, boolean makePrivate){
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
+        if (userBoard != null){
+            Board board = boardRepo.findById(userBoard.getBoardId());
+            board.setPrivate(makePrivate);
+            boardRepo.save(board);
+        }
+        else {
+            throw new RuntimeException("Error 404, board not found.");
+        }
+    }
+
+
 
 
     @GetMapping("/board")
-    Board getBoard(int id){
+    Board getBoard(int id, HttpServletResponse response){
         Board board = boardRepo.findById(id);
-        if(board==null){
-            throw new RuntimeException("Error 404, board not found.");
-        }else {
-            return setLists(board);
+        if(board==null)throw new RuntimeException("Board doesn't exists");
+        else if(board.isPrivate()&&getPrincipal()==null){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("Can't access the board");
+        }
+        else if(!board.isPrivate()) return board;
+        else {
+            UserPrincipal userPrincipal = getPrincipal();
+            if (userPrincipal != null) {
+                UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
+                if (userBoard != null) return boardRepo.findById(userBoard.getBoardId());
+                else {
+                    throw new RuntimeException("Error 404, board not found.");
+                }
+            }else{
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                throw new RuntimeException("Can't access the board");
+            }
         }
     }
 
@@ -162,7 +197,7 @@ public class MainController extends SpringBootServletInitializer {
         if (principal instanceof UserPrincipal)
             return (((UserPrincipal) principal));
         else
-            throw new RuntimeException("Wrong user type");
+            return null;
 
     }
 
