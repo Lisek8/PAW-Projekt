@@ -49,7 +49,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/rest-services/login","/rest-services/register", "/webui/**", "/rest-services/*").permitAll().anyRequest().authenticated()
+        http.cors().and().csrf().disable().authorizeRequests().antMatchers("/rest-services/login","/rest-services/register", "/webui/**", "/rest-services/*", "/**", "/*").permitAll().anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
