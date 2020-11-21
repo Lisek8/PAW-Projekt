@@ -24,8 +24,13 @@
           <span v-else @click="startListEditing(list.id)">{{ list.title }}</span>
         </span>
         <div class="card-list-container">
-          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card" @click="openCardView(card.id)" data-toggle="modal" data-target="#cardViewModal">
-            {{ card.title }}
+          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card" @click="openCardView(list.id, card.id)" data-toggle="modal" data-target="#cardViewModal">
+            <div class="d-flex flex-row flex-wrap">
+              <div v-for="label in card.labels" :key="label" class="label text-light text-center mr-1" :style="{ backgroundColor: label.color }" @click.stop="toggleLabelVisibility">
+                <span v-if="labelsVisible">{{ label.name }}</span>
+              </div>
+            </div>
+            <span>{{ card.title }}</span>
           </div>
         </div>
         <div class="p-2 mt-2 add-card-button" @click="openCardCreationModal(list.id)" data-toggle="modal" data-target="#cardCreationModal">
@@ -49,7 +54,7 @@
   </div>
   <ListCreationModal @create-list="handleListCreation"></ListCreationModal>
   <CardCreationModal @create-card="handleCardCreation"></CardCreationModal>
-  <CardView v-model:cardinfo="card" @card-update="handleCardUpdate"></CardView>
+  <CardView v-model:cardinfo="card" v-model:labels="labels" @card-update="handleCardUpdate"></CardView>
 
 </template>
 

@@ -3,11 +3,75 @@
 }
 
 .description {
-  background-color:  rgba(87, 87, 87, 0.08);
+  background-color:  rgba(87, 87, 87, 0.12);
   min-height: 40px;
   border-radius: 5px;
 }
 
 .description:hover {
   background-color:  rgba(77, 77, 77, 0.2);
+}
+
+.label {
+  border-radius: 3px;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  min-width: 50px;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.card-menu-button {
+  background-color:  rgba(87, 87, 87, 0.12);
+  min-height: 40px;
+  border-radius: 5px;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.card-menu-button:hover {
+  background-color:  rgba(78, 78, 78, 0.2);
+}
+
+.label-dropdown {
+  width: 300px;
+}
+
+.label-dropdown-header {
+  display: block;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.label-dropdown-item {
+  display: block;
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.label-dropdown-item-content {
+  border-radius: 3px;
+  font-weight: 500;
+  box-sizing: border-box;
+  transition: box-shadow .5s;
+}
+
+.label-dropdown-item-content:hover {
+  box-shadow: -7.5px 0 #53535383;
+}
+
+.label-pick-name {
+  width: 200px;
+}
+
+.bg-custom-light {
+  background-color: #ececec;
 }
