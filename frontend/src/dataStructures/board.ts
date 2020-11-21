@@ -1,3 +1,4 @@
+import { Label } from './card';
 import { List } from './list';
 
 export interface Board {
@@ -6,6 +7,7 @@ export interface Board {
   id: string;
   lists?: Array<List>;
   visibility?: BoardVisibility;
+  labels?: Array<Label>;
 };
 
 export enum BoardVisibility {

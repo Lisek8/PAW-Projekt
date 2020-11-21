@@ -6,7 +6,8 @@ import { Options, Vue } from 'vue-class-component';
 import { Prop, ProvideReactive } from 'vue-property-decorator';
 import CardView from '../card-view/CardView.vue';
 import axios from 'axios';
-import { Card } from '@/dataStructures/card';
+import { Card, Label } from '@/dataStructures/card';
+import { LabelContainer } from '@/dataStructures/label-container';
 
 @Options({
   components: {
@@ -27,7 +28,12 @@ export default class BoardView extends Vue {
   @ProvideReactive() card: Card = {
     title: '',
     description: '',
-    id: ''
+    id: 0,
+    labels: []
+  };
+
+  @ProvideReactive() labels: LabelContainer = {
+    labels: []
   };
 
   public boardInfo: Board = {
@@ -42,6 +48,7 @@ export default class BoardView extends Vue {
   public editableTitle = '';
   public listEditing: Record<string, boolean> = {};
   public editableListTitle = '';
+  public labelsVisible = false;
 
   public config = {
     headers: {
@@ -65,7 +72,19 @@ export default class BoardView extends Vue {
           image: Environment.publicPath + 'assets/basic.png',
           id: res.data.id,
           lists: [],
-          visibility: BoardVisibility.Public
+          visibility: BoardVisibility.Public,
+          labels: [
+            {
+              id: 0,
+              name: 'Banan',
+              color: '#fcba03'
+            },
+            {
+              id: 1,
+              name: 'Jabłko',
+              color: '#62CA39'
+            }
+          ]
         };
         for (const listData of res.data.lists) {
           const items = [];
@@ -73,7 +92,19 @@ export default class BoardView extends Vue {
             items.push({
               title: card.name,
               description: card.description,
-              id: card.id
+              id: card.id,
+              labels: [
+                {
+                  id: 0,
+                  name: 'Banan',
+                  color: '#fcba03'
+                },
+                {
+                  id: 1,
+                  name: 'Jabłko',
+                  color: '#62CA39'
+                }
+              ]
             });
           }
           const list = {
@@ -83,6 +114,7 @@ export default class BoardView extends Vue {
           };
           this.boardInfo.lists != null ? this.boardInfo.lists.push(list) : this.boardInfo.lists = [list];
         }
+        this.labels.labels = this.boardInfo.labels as Array<Label>;
       });
   }
 
@@ -124,13 +156,12 @@ export default class BoardView extends Vue {
     }
   }
 
-  openCardView (id: number) {
+  openCardView (listId: number, id: number) {
     // Get card info by id from rest api or extract it from table info
-    this.card = {
-      title: 'Example title',
-      description: 'Example description',
-      id: id.toString()
-    };
+    const foundCard = this.boardInfo.lists?.find(list => list.id === listId)?.items?.find(card => card.id === id);
+    if (foundCard != null) {
+      this.card = foundCard;
+    }
   }
 
   handleCardUpdate () {
@@ -164,5 +195,9 @@ export default class BoardView extends Vue {
       // Only do following if update in rest api was successfull
       foundList.title = this.editableListTitle;
     }
+  }
+
+  toggleLabelVisibility () {
+    this.labelsVisible = !this.labelsVisible;
   }
 };
