@@ -1,21 +1,13 @@
 import { Board } from '@/dataStructures/board';
-import { Environment } from './../../../env.config';
-import { Options, Vue } from 'vue-class-component';
-import ArchivedBoardsModal from '../archived-boards-modal/ArchivedBoardsModal.vue';
-import axios from 'axios';
+import { Environment } from '../../../env.config';
+import { Vue } from 'vue-class-component';
 
-@Options({
-  components: {
-    ArchivedBoardsModal
-  }
-})
-export default class Boards extends Vue {
-  public recentlyViewed: Board[] = [];
-  public privateBoards: Board[] = [];
+export default class ArchivedBoardsModal extends Vue {
+  public archivedBoards: Board[] = [];
 
   mounted () {
     // Get them from backend
-    this.recentlyViewed.push(
+    this.archivedBoards.push(
       {
         title: 'Test0',
         image: Environment.publicPath + 'assets/basic.png',
@@ -67,21 +59,13 @@ export default class Boards extends Vue {
         id: 'Test9'
       }
     );
-    const config = {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('jwt')
-      }
-    };
-    axios.get(Environment.restServices + 'boards', config)
-      .then(res => {
-        for (let i = 0; i < res.data.length; i++) {
-          const board = {
-            title: res.data[i].name,
-            image: Environment.publicPath + 'assets/basic.png',
-            id: res.data[i].id
-          };
-          this.privateBoards.push(board);
-        }
-      });
-  };
+  }
+
+  deleteBoard (/* id: string */) {
+    // Implement board deletion
+  }
+
+  restoreBoard (/* id: string */) {
+    // Implement board restoration
+  }
 };

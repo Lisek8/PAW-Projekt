@@ -30,7 +30,7 @@
   background-color: #bbbbbb;
 }
 
-.visibility-toggle-button {
+.board-menu-button {
   background-color: rgba(248, 249, 250, 0.4);
   border-radius: 5px;
   min-height: 32px;
@@ -44,7 +44,7 @@
   user-select: none; /* Standard */
 }
 
-.visibility-toggle-button:hover {
+.board-menu-button:hover {
   background-color: rgba(248, 249, 250, 0.6);
 }
 
