@@ -47,7 +47,9 @@
                     Etykiety
                   </div>
                   <div class="dropdown-menu label-dropdown bg-custom-light" aria-labelledby="dropdownMenuLabels" @click.stop="">
-                    <span class="container-fluid text-center text-secondary label-dropdown-header">Etykiety</span>
+                    <span class="container-fluid text-center text-secondary label-dropdown-header">
+                      Etykiety
+                    </span>
                     <div class="dropdown-divider"></div>
                     <div class="label-dropdown-item" v-for="label in labels.labels" :key="label">
                       <div class="d-flex flex-row align-items-center ml-2 mr-2">

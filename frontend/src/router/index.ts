@@ -4,7 +4,7 @@ import Login from '../components/login/Login.vue';
 import Boards from '../components/boards/Boards.vue';
 import BoardView from '../components/board-view/BoardView.vue';
 
-function guardMyroute (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
+function checkIfUserIsLoggedIn (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
   let isAuthenticated = false;
   if (localStorage.getItem('loggedIn') === 'true') {
     isAuthenticated = true;
@@ -32,13 +32,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/boards',
     name: 'Boards',
-    beforeEnter: guardMyroute,
+    beforeEnter: checkIfUserIsLoggedIn,
     component: Boards
   },
   {
     path: '/board/:boardId',
     name: 'Board',
-    beforeEnter: guardMyroute,
+    beforeEnter: checkIfUserIsLoggedIn,
     component: BoardView,
     props: true
   }

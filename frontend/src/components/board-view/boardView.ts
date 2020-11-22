@@ -2,6 +2,7 @@ import { Board, BoardVisibility } from '@/dataStructures/board';
 import { Environment } from './../../../env.config';
 import ListCreationModal from '../list-creation-modal/ListCreationModal.vue';
 import CardCreationModal from '../card-creation-modal/CardCreationModal.vue';
+import ArchiveBoardConfirmationModal from '../archive-board-confirmation-modal/ArchiveBoardConfirmationModal.vue';
 import { Options, Vue } from 'vue-class-component';
 import { Prop, ProvideReactive } from 'vue-property-decorator';
 import CardView from '../card-view/CardView.vue';
@@ -13,7 +14,8 @@ import { LabelContainer } from '@/dataStructures/label-container';
   components: {
     ListCreationModal,
     CardCreationModal,
-    CardView
+    CardView,
+    ArchiveBoardConfirmationModal
   },
   directives: {
     focus: {
@@ -199,5 +201,9 @@ export default class BoardView extends Vue {
 
   toggleLabelVisibility () {
     this.labelsVisible = !this.labelsVisible;
+  }
+
+  archiveBoard () {
+    // Handle board archiving here
   }
 };
