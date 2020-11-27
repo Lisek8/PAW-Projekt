@@ -248,6 +248,22 @@ public class MainController extends SpringBootServletInitializer {
         return board;
     }
 
+    @PutMapping("/listName")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void renameList(int id, String name){
+        com.foxtrot3.trello.database.list.List list = listRepo.findById(id);
+        if(list==null)throw new RuntimeException("List 404");
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(list.getBoardId(), userPrincipal.getId());
+        if (userBoard != null&&userBoard.isAdmin()) {
+            list.setName(name);
+            listRepo.save(list);
+        }else{
+            throw new RuntimeException("No admin access to the board");
+        }
+    }
+
+
     @PostMapping("/card")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     void createCard(@RequestBody CardForm cardForm){
