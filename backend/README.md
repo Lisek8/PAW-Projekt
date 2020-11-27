@@ -111,3 +111,12 @@ sets board isPrivate field to requested status. Current user has to be admin of 
 
 sets board isArchived field to requested status. Current user has to be admin of the board.
 
+
+
+
+
+
+### /boardArchive(int id, string name) (Put)
+
+sets the board name to the name parameter. Current user has to be admin of the board.
+

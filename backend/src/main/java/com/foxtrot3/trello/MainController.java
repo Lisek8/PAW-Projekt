@@ -183,6 +183,21 @@ public class MainController extends SpringBootServletInitializer {
         userBoardRepo.save(userBoard);
     }
 
+    @PutMapping("/boardName")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void renameBoard(int id, String name){
+        Board board = boardRepo.findById(id);
+        if(board==null)throw new RuntimeException("Board 404");
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(id, userPrincipal.getId());
+        if (userBoard != null&&userBoard.isAdmin()) {
+            board.setName(name);
+            boardRepo.save(board);
+        }else{
+            throw new RuntimeException("No admin access to the board");
+        }
+    }
+
     @DeleteMapping("/board")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     void deleteBoard(int id){
