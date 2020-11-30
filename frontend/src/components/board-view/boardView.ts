@@ -74,7 +74,7 @@ export default class BoardView extends Vue {
           image: Environment.publicPath + 'assets/basic.png',
           id: res.data.id,
           lists: [],
-          visibility: BoardVisibility.Public,
+          visibility: res.data.private ? BoardVisibility.Private : BoardVisibility.Public,
           labels: [
             {
               id: 0,
@@ -143,19 +143,24 @@ export default class BoardView extends Vue {
   }
 
   toggleBoardVisibility () {
-    // Send request to restAPI to change visibility
-    // If successfull request again board data or only visibility depending on the implementation in rest api
-    // Delete following once implemented
-    switch (this.boardInfo.visibility) {
-      case BoardVisibility.Private:
-        this.boardInfo.visibility = BoardVisibility.Public;
-        break;
-      case BoardVisibility.Public:
-        this.boardInfo.visibility = BoardVisibility.Private;
-        break;
-      default:
-        break;
-    }
+    const makePrivate = this.boardInfo.visibility === BoardVisibility.Public;
+    this.config.params = {
+      id: this.boardId,
+      makePrivate: makePrivate
+    };
+    axios.put(Environment.restServices + 'boardPrivacy', {}, this.config)
+      .then(() => {
+        switch (this.boardInfo.visibility) {
+          case BoardVisibility.Private:
+            this.boardInfo.visibility = BoardVisibility.Public;
+            break;
+          case BoardVisibility.Public:
+            this.boardInfo.visibility = BoardVisibility.Private;
+            break;
+          default:
+            break;
+        }
+      });
   }
 
   openCardView (listId: number, id: number) {
