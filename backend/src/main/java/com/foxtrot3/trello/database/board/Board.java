@@ -18,6 +18,8 @@ public class Board {
     @Column(name="is_private")
     private boolean isPrivate;
     private String link;
+    @Column(name="is_archived")
+    private boolean isArchived = false;
     @JsonInclude()
     @Transient
     private java.util.List<List> lists;
@@ -80,5 +82,11 @@ public class Board {
         this.link = userType;
     }
 
+    public boolean isArchived() {
+        return isArchived;
+    }
 
+    public void setArchived(boolean archived) {
+        isArchived = archived;
+    }
 }

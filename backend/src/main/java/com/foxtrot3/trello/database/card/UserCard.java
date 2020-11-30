@@ -16,6 +16,11 @@ public class UserCard {
     public UserCard() {
     }
 
+    public UserCard(int userId, int cardId) {
+        this.userId = userId;
+        this.cardId = cardId;
+    }
+
     public int getId() {
         return id;
     }
