@@ -184,8 +184,6 @@ export default class BoardView extends Vue {
     axios.put(Environment.restServices + 'boardName', requstBody, this.config)
       .then(() => {
         this.boardInfo.title = this.editableTitle;
-      }).catch(error => {
-        console.log(error);
       });
   }
 
