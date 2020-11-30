@@ -177,8 +177,16 @@ export default class BoardView extends Vue {
 
   endTitleEditing () {
     this.titleEditing = false;
-    // Only do following if update in rest api was successfull
-    this.boardInfo.title = this.editableTitle;
+    const requstBody = {
+      id: this.boardId,
+      name: this.editableTitle
+    };
+    axios.put(Environment.restServices + 'boardName', requstBody, this.config)
+      .then(() => {
+        this.boardInfo.title = this.editableTitle;
+      }).catch(error => {
+        console.log(error);
+      });
   }
 
   startListEditing (listToEdit: number) {

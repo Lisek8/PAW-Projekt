@@ -17,10 +17,9 @@ export default class Login extends Vue {
       .then(res => {
         localStorage.setItem('jwt', res.data.jwt);
         localStorage.setItem('loggedIn', 'true');
-        window.location.reload();
         this.loginFailure = false;
+        router.push('/').then(() => { window.location.reload(); });
       })
       .catch(() => { this.loginFailure = true; });
-    router.push('/');
   }
 };
