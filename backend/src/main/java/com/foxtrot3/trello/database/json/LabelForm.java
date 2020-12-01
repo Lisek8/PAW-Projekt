@@ -1,25 +1,15 @@
-package com.foxtrot3.trello.database.label;
+package com.foxtrot3.trello.database.json;
 
-import javax.persistence.*;
+public class LabelForm {
 
-@Entity
-@Table(name="labels")
-public class Label {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String color;
-    @Column(name="board_id")
-    private int boardId;
 
-    public Label() {
-    }
-
-    public Label(String name, String color, int boardId) {
+    public LabelForm(int id, String name, String color) {
+        this.id = id;
         this.name = name;
         this.color = color;
-        this.boardId = boardId;
     }
 
     public int getId() {
@@ -28,6 +18,9 @@ public class Label {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LabelForm() {
     }
 
     public String getName() {
@@ -44,13 +37,5 @@ public class Label {
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public int getBoardId() {
-        return boardId;
-    }
-
-    public void setBoardId(int boardId) {
-        this.boardId = boardId;
     }
 }

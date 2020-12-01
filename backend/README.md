@@ -127,3 +127,74 @@ sets the board name to the name parameter. Current user has to be admin of the b
 
 sets the list name to the name parameter. Current user has to be admin of the board the list is placed in.
 
+
+
+### /cardDescription(int id, string name) (Put)
+
+sets the card description to the description parameter. Current user has to be logged in and have access to the board
+
+
+### /label (Post)
+
+##### Request
+```
+{
+    "name": <string>,
+    "color": <string>
+}
+```
+
+Creates a new label with chosen name and color
+
+
+
+### /label(int id) (Put)
+
+##### Request
+```
+{
+    "id": <int>   //id of the label that you want to edit
+    "name": <string>,
+    "color": <string>
+}
+```
+
+Changes the label to given name and color. Status 404 if wrong id is given.
+
+
+
+
+### /cardLabel(int labelId, int cardId) (Post)
+
+##### Request
+
+
+Adds the selected label to a card
+
+
+
+
+
+### /label (Post)
+
+##### Request
+```
+{
+    "id": <int>   //id of the board, to which you want to add a label
+    "name": <string>,
+    "color": <string>
+}
+```
+
+Creates a new label with chosen name and color and adds it in the selected board
+
+
+
+### /label(int id) (Get)
+
+Displays label with selected id. Returns 404 status if label doesn't exist.
+
+
+### /labels(int boardId) (Get)
+
+Displays all the labels present in the selected board
