@@ -206,8 +206,14 @@ export default class BoardView extends Vue {
     const foundList = this.boardInfo.lists?.find(list => list.id === listToEdit);
     if (foundList != null) {
       this.listEditing[foundList.id.toString()] = false;
-      // Only do following if update in rest api was successfull
-      foundList.title = this.editableListTitle;
+      this.config.params = {
+        id: foundList.id,
+        name: this.editableListTitle
+      };
+      axios.put(Environment.restServices + 'listName', {}, this.config)
+        .then(() => {
+          foundList.title = this.editableListTitle;
+        });
     }
   }
 
