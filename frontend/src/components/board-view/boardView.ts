@@ -9,6 +9,7 @@ import CardView from '../card-view/CardView.vue';
 import axios from 'axios';
 import { Card, Label } from '@/dataStructures/card';
 import { LabelContainer } from '@/dataStructures/label-container';
+import router from '@/router';
 
 @Options({
   components: {
@@ -215,6 +216,13 @@ export default class BoardView extends Vue {
   }
 
   archiveBoard () {
-    // Handle board archiving here
+    this.config.params = {
+      id: this.boardId,
+      makeArchived: true
+    };
+    axios.put(Environment.restServices + 'boardArchive', {}, this.config)
+      .then(() => {
+        router.push('/boards');
+      });
   }
 };
