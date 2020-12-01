@@ -1,8 +1,12 @@
 package com.foxtrot3.trello.database.card;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.foxtrot3.trello.database.label.Label;
+
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="cards")
@@ -23,7 +27,9 @@ public class Card {
     private Date createDate;
     @Column(name="list_id")
     private int listId;
-
+    @JsonInclude()
+    @Transient
+    private java.util.List<Label> labels;
     public Card() {
     }
 
@@ -96,5 +102,13 @@ public class Card {
 
     public void setListId(int labelId) {
         this.listId = labelId;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
     }
 }

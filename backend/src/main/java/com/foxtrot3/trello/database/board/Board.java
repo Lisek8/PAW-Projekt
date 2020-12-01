@@ -1,6 +1,7 @@
 package com.foxtrot3.trello.database.board;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.foxtrot3.trello.database.label.Label;
 import com.foxtrot3.trello.database.list.List;
 
 import javax.persistence.*;
@@ -23,6 +24,9 @@ public class Board {
     @JsonInclude()
     @Transient
     private java.util.List<List> lists;
+    @JsonInclude()
+    @Transient
+    private java.util.List<Label> labels;
 
     public java.util.List<List> getLists() {
         return lists;
@@ -88,5 +92,13 @@ public class Board {
 
     public void setArchived(boolean archived) {
         isArchived = archived;
+    }
+
+    public java.util.List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(java.util.List<Label> labels) {
+        this.labels = labels;
     }
 }

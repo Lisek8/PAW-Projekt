@@ -47,13 +47,13 @@ Use `runRestServices.bat` (**requires** war file to be built)
 
 
 
-### /boards  (Get)
+### /boards(boolean archived)  (Get)
 
 ##### returns
 ```
 List<Board>
 ```
-
+Lists all the boards of the current user. If archived parameter is false, it returns non-archived boards. Otherwise, returns archived ones.
 
 
 
@@ -84,6 +84,39 @@ creates a new, empty board
 
 
 creates a new, empty list
+
+
+
+### /card(int id) (Get)
+
+
+##### returns
+```
+{
+Card
+List<Label>
+}
+```
+
+displays a card with given id, or returns 404 status
+
+
+
+
+### /card(int id) (Put)
+
+##### body
+```
+{
+    "name": <string>,
+    "description": <string>
+    "isArchived": <boolean>
+    "deadline": <Date>
+    "listId": <int>
+
+}
+```
+Edits the card to values given in body
 
 
 ### /card() (Post)
