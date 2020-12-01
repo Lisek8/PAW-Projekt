@@ -2,7 +2,7 @@ package com.foxtrot3.trello;
 
 import com.foxtrot3.trello.database.card.UserCard;
 import com.foxtrot3.trello.database.card.UserCardRepo;
-import com.foxtrot3.trello.database.json.CardForm;
+import com.foxtrot3.trello.database.json.*;
 import com.foxtrot3.trello.database.board.Board;
 import com.foxtrot3.trello.database.board.BoardRepo;
 import com.foxtrot3.trello.database.board.UserBoard;
@@ -10,9 +10,6 @@ import com.foxtrot3.trello.database.board.UserBoardRepo;
 import com.foxtrot3.trello.database.card.Card;
 import com.foxtrot3.trello.database.card.CardRepo;
 import com.foxtrot3.trello.database.hello.HelloRepo;
-import com.foxtrot3.trello.database.json.LabelForm;
-import com.foxtrot3.trello.database.json.ListForm;
-import com.foxtrot3.trello.database.json.RegisterForm;
 import com.foxtrot3.trello.database.label.CardLabel;
 import com.foxtrot3.trello.database.label.CardLabelRepo;
 import com.foxtrot3.trello.database.label.Label;
@@ -109,17 +106,19 @@ public class MainController extends SpringBootServletInitializer {
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @GetMapping("/boards")
-    List<Board> getBoards(){
+    List<Board> getBoards(boolean archived){
         UserPrincipal userPrincipal = getPrincipal();
         List<UserBoard> userBoards = userBoardRepo.findAllByUserId(userPrincipal.getId());
         List<Board> boards = new ArrayList<>();
         for(UserBoard board : userBoards){
             Board foundBoard = boardRepo.findById(board.getBoardId());
             foundBoard = setLists(foundBoard);
-            if(!foundBoard.isArchived())boards.add(foundBoard);
+            if(!archived&&!foundBoard.isArchived())boards.add(foundBoard);
+            else if(archived&&foundBoard.isArchived())boards.add(foundBoard);
         }
         return boards;
     }
+
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @PutMapping("/boardPrivacy")
@@ -258,7 +257,9 @@ public class MainController extends SpringBootServletInitializer {
         for(com.foxtrot3.trello.database.list.List list:boardLists){
             list=setCards(list);
         }
+        List<Label>labels = labelRepo.findAllByBoardId(board.getId());
         board.setLists(boardLists);
+        board.setLabels(labels);
         return board;
     }
 
@@ -287,6 +288,33 @@ public class MainController extends SpringBootServletInitializer {
         cardRepo.save(card);
     }
 
+    @GetMapping("/card")
+    Card showCard(int id, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+        card.setLabels(cardLabelRepo.findAllByCardId(id));
+        return card;
+    }
+
+    @PutMapping("/card")
+    Card editCard(int id, @RequestBody CardEditForm cardEditForm, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+        card.setName(cardEditForm.getName());
+        card.setDescription(cardEditForm.getDescription());
+        card.setArchived(cardEditForm.isArchived());
+        card.setDeadline(cardEditForm.getDeadline());
+        card.setListId(cardEditForm.getListId());
+        cardRepo.save(card);
+        return card;
+    }
+
     @PutMapping("/cardDescription")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     void setCardDescription(int id, String description, HttpServletResponse response){
@@ -299,6 +327,7 @@ public class MainController extends SpringBootServletInitializer {
         UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
         if (userBoard != null) {
             card.setDescription(description);
+            cardRepo.save(card);
         }else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             throw new RuntimeException("No access to the board");
