@@ -10,8 +10,13 @@ import com.foxtrot3.trello.database.board.UserBoardRepo;
 import com.foxtrot3.trello.database.card.Card;
 import com.foxtrot3.trello.database.card.CardRepo;
 import com.foxtrot3.trello.database.hello.HelloRepo;
+import com.foxtrot3.trello.database.json.LabelForm;
 import com.foxtrot3.trello.database.json.ListForm;
 import com.foxtrot3.trello.database.json.RegisterForm;
+import com.foxtrot3.trello.database.label.CardLabel;
+import com.foxtrot3.trello.database.label.CardLabelRepo;
+import com.foxtrot3.trello.database.label.Label;
+import com.foxtrot3.trello.database.label.LabelRepo;
 import com.foxtrot3.trello.database.list.ListRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
@@ -63,6 +68,10 @@ public class MainController extends SpringBootServletInitializer {
     CardRepo cardRepo;
     @Autowired
     UserCardRepo userCardRepo;
+    @Autowired
+    LabelRepo labelRepo;
+    @Autowired
+    CardLabelRepo cardLabelRepo;
 
     @GetMapping("/hello")
     @ResponseBody
@@ -216,6 +225,11 @@ public class MainController extends SpringBootServletInitializer {
                 cardRepo.deleteAllByListId(list.getId());
             }
             listRepo.deleteAllByBoardId(id);
+            List<Label>labels = labelRepo.findAllByBoardId(id);
+            for(Label label:labels){
+                cardLabelRepo.deleteAllByLabelId(label.getId());
+            }
+            labelRepo.deleteAllByBoardId(id);
             boardRepo.delete(board);
         }
         else {
@@ -291,6 +305,77 @@ public class MainController extends SpringBootServletInitializer {
         }
     }
 
+    @PostMapping("/label")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void createLabel(@RequestBody LabelForm labelForm){
+        Label label = new Label(labelForm.getName(), labelForm.getColor(),labelForm.getId());
+        labelRepo.save(label);
+    }
+
+    @PutMapping("/label")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void editLabel(@RequestBody LabelForm labelForm, HttpServletResponse response){
+        Label label = labelRepo.findById(labelForm.getId());
+        if(label==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Label 404");
+        }
+        label.setColor(labelForm.getColor());
+        label.setName(labelForm.getName());
+        labelRepo.save(label);
+    }
+
+    @GetMapping("/label")
+    Label displayLabel(int id, HttpServletResponse response){
+        Label label = labelRepo.findById(id);
+        if(label==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Label 404");
+        }
+        return label;
+    }
+
+    @GetMapping("/labels")
+    List<Label> displayLabels(int boardId){
+        List<Label> labels = labelRepo.findAllByBoardId(boardId);
+        return labels;
+    }
+
+    @PostMapping("/cardLabel")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void addLabel(int labelId, int cardId, HttpServletResponse response){
+        Label label = labelRepo.findById(labelId);
+        Card card = cardRepo.findById(cardId);
+        if(label==null||card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Wrong parameters");
+        }
+        CardLabel cardLabel = new CardLabel(cardId, labelId);
+        cardLabelRepo.save(cardLabel);
+    }
+
+    @DeleteMapping("/cardLabel")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteCardLabel(int labelId, int cardId, HttpServletResponse response){
+        CardLabel cardLabel = cardLabelRepo.findByLabelIdAndCardId(labelId, cardId);
+        if(cardLabel==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Wrong parameters");
+        }
+        cardLabelRepo.delete(cardLabel);
+    }
+
+    @DeleteMapping("/label")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteLabel(int labelId, HttpServletResponse response){
+        Label label = labelRepo.findById(labelId);
+        if(label==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Label does not exist");
+        }
+        cardLabelRepo.deleteAllByLabelId(labelId);
+        labelRepo.delete(label);
+    }
 
     public UserPrincipal getPrincipal() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
