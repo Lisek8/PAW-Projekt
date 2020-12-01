@@ -1,71 +1,61 @@
 import { Board } from '@/dataStructures/board';
 import { Environment } from '../../../env.config';
 import { Vue } from 'vue-class-component';
+import axios from 'axios';
+import router from '@/router';
+import { InjectReactive } from 'vue-property-decorator';
 
 export default class ArchivedBoardsModal extends Vue {
   public archivedBoards: Board[] = [];
+  @InjectReactive() privateBoards !: Board[];
+
+  public config = {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    },
+    params: {}
+  };
 
   mounted () {
-    // Get them from backend
-    this.archivedBoards.push(
-      {
-        title: 'Test0',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test0'
-      },
-      {
-        title: 'Test1',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test1'
-      },
-      {
-        title: 'Test2',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test2'
-      },
-      {
-        title: 'Test3',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test3'
-      },
-      {
-        title: 'Test4',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test4'
-      },
-      {
-        title: 'Test5',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test5'
-      },
-      {
-        title: 'Test6',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test6'
-      },
-      {
-        title: 'Test7',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test7'
-      },
-      {
-        title: 'Test8',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test8'
-      },
-      {
-        title: 'Test9',
-        image: Environment.publicPath + 'assets/basic.png',
-        id: 'Test9'
-      }
-    );
+    this.config.params = {
+      archived: true
+    };
+    axios.get(Environment.restServices + 'boards', this.config)
+      .then(res => {
+        for (const backendBoard of res.data) {
+          const board = {
+            title: backendBoard.name,
+            image: Environment.publicPath + 'assets/basic.png',
+            id: backendBoard.id
+          };
+          this.archivedBoards.push(board);
+        }
+      });
   }
 
-  deleteBoard (/* id: string */) {
-    // Implement board deletion
+  deleteBoard (id: string) {
+    this.config.params = {
+      id: id
+    };
+    axios.delete(Environment.restServices + 'board', this.config)
+      .then(() => {
+        this.archivedBoards = this.archivedBoards.filter(board => board.id !== id);
+      });
   }
 
-  restoreBoard (/* id: string */) {
-    // Implement board restoration
+  restoreBoard (id: string) {
+    this.config.params = {
+      id: id,
+      makeArchived: false
+    };
+    axios.put(Environment.restServices + 'boardArchive', {}, this.config)
+      .then((response) => {
+        this.archivedBoards = this.archivedBoards.filter(board => board.id !== id);
+        this.privateBoards.push({
+          title: response.data.name,
+          image: Environment.publicPath + 'assets/basic.png',
+          id: response.data.id
+        });
+      });
   }
 };
