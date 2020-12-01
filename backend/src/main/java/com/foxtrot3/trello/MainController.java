@@ -273,6 +273,24 @@ public class MainController extends SpringBootServletInitializer {
         cardRepo.save(card);
     }
 
+    @PutMapping("/cardDescription")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void setCardDescription(int id, String description, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            card.setDescription(description);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
 
     public UserPrincipal getPrincipal() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
