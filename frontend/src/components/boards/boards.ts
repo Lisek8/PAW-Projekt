@@ -70,6 +70,9 @@ export default class Boards extends Vue {
     const config = {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+      },
+      params: {
+        archived: false
       }
     };
     axios.get(Environment.restServices + 'boards', config)
