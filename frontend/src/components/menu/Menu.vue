@@ -11,7 +11,7 @@
         <router-link to="/login" class="btn btn-outline-warning my-2 my-sm-0">Zaloguj się</router-link>
       </li>
       <template v-else>
-        <form class="form-inline">
+        <form class="form-inline" @submit.prevent>
           <li class="nav-item">
             <button @click="openBoardCreationModal" class="btn btn-secondary my-2 my-sm-0" data-toggle="modal" data-target="#boardCreationModal">
               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
