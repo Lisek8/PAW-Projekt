@@ -70,7 +70,6 @@ export default class CardView extends Vue {
       };
       axios.delete(Environment.restServices + 'cardLabel', this.config)
         .then(() => {
-          // console.log(this.config.params);
           this.card.labels = this.card.labels.filter(label => label.id !== id);
         });
     } else {
@@ -82,7 +81,6 @@ export default class CardView extends Vue {
         };
         axios.post(Environment.restServices + 'cardLabel', {}, this.config)
           .then(() => {
-            // console.log(this.config.params);
             this.card.labels.push(labelToAdd);
             this.card.labels = this.card.labels.sort((labelFirst, labelSecond) => labelFirst.id - labelSecond.id);
           });
