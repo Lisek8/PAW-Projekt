@@ -2,12 +2,16 @@ import { Board } from '@/dataStructures/board';
 import { Environment } from '../../../env.config';
 import { Vue } from 'vue-class-component';
 import axios from 'axios';
-import router from '@/router';
 import { InjectReactive } from 'vue-property-decorator';
 
 export default class ArchivedBoardsModal extends Vue {
   public archivedBoards: Board[] = [];
   @InjectReactive() privateBoards !: Board[];
+  public boardInfo: Board = {
+    title: '',
+    image: '',
+    id: ''
+  };
 
   public config = {
     headers: {
@@ -49,13 +53,16 @@ export default class ArchivedBoardsModal extends Vue {
       makeArchived: false
     };
     axios.put(Environment.restServices + 'boardArchive', {}, this.config)
-      .then((response) => {
+      .then(() => {
         this.archivedBoards = this.archivedBoards.filter(board => board.id !== id);
-        this.privateBoards.push({
-          title: response.data.name,
-          image: Environment.publicPath + 'assets/basic.png',
-          id: response.data.id
-        });
+        axios.get(Environment.restServices + 'board', this.config)
+          .then(res => {
+            this.privateBoards.push({
+              title: res.data.name,
+              image: Environment.publicPath + 'assets/basic.png',
+              id: res.data.id
+            });
+          });
       });
   }
 };
