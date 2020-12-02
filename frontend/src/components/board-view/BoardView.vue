@@ -60,7 +60,7 @@
   </div>
   <ListCreationModal @create-list="handleListCreation"></ListCreationModal>
   <CardCreationModal @create-card="handleCardCreation"></CardCreationModal>
-  <CardView v-model:cardinfo="card" v-model:labels="labels" @card-update="handleCardUpdate"></CardView>
+  <CardView v-model:listinfo="listId" v-model:cardinfo="card" v-model:labels="labels" @card-update="handleCardUpdate"></CardView>
   <ArchiveBoardConfirmationModal @archive-board='archiveBoard'></ArchiveBoardConfirmationModal>
 
 </template>

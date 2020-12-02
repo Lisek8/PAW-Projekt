@@ -41,7 +41,7 @@
       </div>
     </div>
   </div>
-  <ArchivedBoardsModal></ArchivedBoardsModal>
+  <ArchivedBoardsModal v-model:boardsinfo="privateBoards"></ArchivedBoardsModal>
 </template>
 
 <script src="./boards"></script>

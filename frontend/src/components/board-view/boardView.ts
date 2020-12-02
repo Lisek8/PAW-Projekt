@@ -35,6 +35,8 @@ export default class BoardView extends Vue {
     labels: []
   };
 
+  @ProvideReactive() listId = 0;
+
   @ProvideReactive() labels: LabelContainer = {
     labels: []
   };
@@ -76,38 +78,22 @@ export default class BoardView extends Vue {
           id: res.data.id,
           lists: [],
           visibility: res.data.private ? BoardVisibility.Private : BoardVisibility.Public,
-          labels: [
-            {
-              id: 0,
-              name: 'Banan',
-              color: '#fcba03'
-            },
-            {
-              id: 1,
-              name: 'Jabłko',
-              color: '#62CA39'
-            }
-          ]
+          labels: res.data.labels
         };
         for (const listData of res.data.lists) {
           const items = [];
           for (const card of listData.cards) {
+            let labels;
+            if (card.labels == null) {
+              labels = [];
+            } else {
+              labels = card.labels;
+            }
             items.push({
               title: card.name,
               description: card.description,
               id: card.id,
-              labels: [
-                {
-                  id: 0,
-                  name: 'Banan',
-                  color: '#fcba03'
-                },
-                {
-                  id: 1,
-                  name: 'Jabłko',
-                  color: '#62CA39'
-                }
-              ]
+              labels: labels
             });
           }
           const list = {
@@ -169,6 +155,7 @@ export default class BoardView extends Vue {
     const foundCard = this.boardInfo.lists?.find(list => list.id === listId)?.items?.find(card => card.id === id);
     if (foundCard != null) {
       this.card = foundCard;
+      this.listId = listId;
     }
   }
 

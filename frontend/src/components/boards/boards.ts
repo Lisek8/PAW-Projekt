@@ -3,6 +3,7 @@ import { Environment } from './../../../env.config';
 import { Options, Vue } from 'vue-class-component';
 import ArchivedBoardsModal from '../archived-boards-modal/ArchivedBoardsModal.vue';
 import axios from 'axios';
+import { ProvideReactive } from 'vue-property-decorator';
 
 @Options({
   components: {
@@ -11,7 +12,7 @@ import axios from 'axios';
 })
 export default class Boards extends Vue {
   public recentlyViewed: Board[] = [];
-  public privateBoards: Board[] = [];
+  @ProvideReactive() privateBoards: Board[] = [];
 
   mounted () {
     // Get them from backend
@@ -70,6 +71,9 @@ export default class Boards extends Vue {
     const config = {
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+      },
+      params: {
+        archived: false
       }
     };
     axios.get(Environment.restServices + 'boards', config)
