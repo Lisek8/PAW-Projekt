@@ -170,11 +170,11 @@ export default class BoardView extends Vue {
 
   endTitleEditing () {
     this.titleEditing = false;
-    const requstBody = {
+    this.config.params = {
       id: this.boardId,
       name: this.editableTitle
     };
-    axios.put(Environment.restServices + 'boardName', requstBody, this.config)
+    axios.put(Environment.restServices + 'boardName', {}, this.config)
       .then(() => {
         this.boardInfo.title = this.editableTitle;
       });
