@@ -38,7 +38,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/board/:boardId',
     name: 'Board',
-    beforeEnter: checkIfUserIsLoggedIn,
     component: BoardView,
     props: true
   }
