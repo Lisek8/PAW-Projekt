@@ -248,6 +248,14 @@ public class MainController extends SpringBootServletInitializer {
 
     com.foxtrot3.trello.database.list.List setCards(com.foxtrot3.trello.database.list.List list){
         List<Card>listCards = cardRepo.findAllByListId(list.getId());
+        for(Card card:listCards){
+            List<CardLabel>cardLabels = cardLabelRepo.findAllByCardId(card.getId());
+            List<Label>labels = new ArrayList<>();
+            for(CardLabel cardLabel:cardLabels){
+                labels.add(labelRepo.findById(cardLabel.getLabelId()));
+            }
+            card.setLabels(labels);
+        }
         list.setCards(listCards);
         return list;
     }
@@ -289,13 +297,19 @@ public class MainController extends SpringBootServletInitializer {
     }
 
     @GetMapping("/card")
-    Card showCard(int id, HttpServletResponse response){
+    Card showCard(int id, HttpServletResponse response) {
         Card card = cardRepo.findById(id);
-        if(card==null){
+        if (card == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             throw new RuntimeException("Card 404");
         }
-        card.setLabels(cardLabelRepo.findAllByCardId(id));
+        List<CardLabel> cardLabels = cardLabelRepo.findAllByCardId(card.getId());
+        List<Label> labels = new ArrayList<>();
+        for (CardLabel cardLabel : cardLabels) {
+            labels.add(labelRepo.findById(cardLabel.getLabelId()));
+        }
+        card.setLabels(labels);
+
         return card;
     }
 
