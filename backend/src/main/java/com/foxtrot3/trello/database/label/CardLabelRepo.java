@@ -10,5 +10,5 @@ public interface CardLabelRepo extends JpaRepository<CardLabel, Integer> {
     CardLabel findByLabelIdAndCardId(int labelId, int cardId);
     @Transactional
     void deleteAllByLabelId(int labelId);
-    List<Label>findAllByCardId(int cardId);
+    List<CardLabel>findAllByCardId(int cardId);
 }
