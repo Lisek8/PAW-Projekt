@@ -102,3 +102,9 @@
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
+
+.due-date {
+  border-radius: 5px;
+  width: fit-content;
+  font-size: small;
+}

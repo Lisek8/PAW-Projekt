@@ -10,6 +10,7 @@ import axios from 'axios';
 import { Card, Label } from '@/dataStructures/card';
 import { LabelContainer } from '@/dataStructures/label-container';
 import router from '@/router';
+import { DueDateLabelColor } from '@/dataStructures/dueDateLabel';
 
 @Options({
   components: {
@@ -32,7 +33,8 @@ export default class BoardView extends Vue {
     title: '',
     description: '',
     id: 0,
-    labels: []
+    labels: [],
+    dueDateComplete: false
   };
 
   @ProvideReactive() listId = 0;
@@ -93,7 +95,8 @@ export default class BoardView extends Vue {
               title: card.name,
               description: card.description,
               id: card.id,
-              labels: labels
+              labels: labels,
+              dueDateComplete: false
             });
           }
           const list = {
@@ -217,5 +220,33 @@ export default class BoardView extends Vue {
       .then(() => {
         router.push('/boards');
       });
+  }
+
+  formatDueDateString (dateToFormat: Date) {
+    const localeString = dateToFormat.toLocaleString('pl-PL', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+    const dateParts = localeString.split(' ');
+    return dateParts[0] + ' ' + dateParts[1] + (new Date().getFullYear() !== dateToFormat.getFullYear() ? ' ' + dateToFormat.getFullYear() : '');
+  }
+
+  getDueDateLabelColor () {
+    if (this.card.dueDate != null) {
+      let color = DueDateLabelColor.None;
+      const currentDate = new Date();
+      currentDate.setSeconds(0, 0);
+      const dateWarning = new Date(this.card.dueDate);
+      dateWarning.setDate(dateWarning.getDate() - 2);
+      if (this.card.dueDateComplete) {
+        color = DueDateLabelColor.Complete;
+      } else if (currentDate > this.card.dueDate) {
+        color = DueDateLabelColor.Overdue;
+      } else if (currentDate > dateWarning) {
+        color = DueDateLabelColor.Soon;
+      }
+      return color;
+    }
   }
 };

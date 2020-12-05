@@ -3,6 +3,8 @@ export interface Card {
   description: string;
   id: number;
   labels: Array<Label>;
+  dueDate?: Date;
+  dueDateComplete: boolean;
 };
 
 export interface Label {

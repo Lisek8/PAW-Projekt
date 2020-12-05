@@ -4,6 +4,9 @@ import axios from 'axios';
 import { Options, Vue } from 'vue-class-component';
 import { Emit, InjectReactive } from 'vue-property-decorator';
 import { Environment } from './../../../env.config';
+import Datepicker from 'vue3-datepicker';
+import { pl } from 'date-fns/esm/locale';
+import { DueDateLabel, DueDateLabelColor } from '@/dataStructures/dueDateLabel';
 
 @Options({
   emits: [
@@ -16,6 +19,9 @@ import { Environment } from './../../../env.config';
         element.focus();
       }
     }
+  },
+  components: {
+    Datepicker
   }
 })
 export default class CardView extends Vue {
@@ -24,6 +30,10 @@ export default class CardView extends Vue {
   @InjectReactive() labels !: LabelContainer;
   public editingDescription = false;
   public editableDescription = '';
+  public selectedDate: Date = new Date();
+  public selectedTime = this.selectedDate.getHours() + ':' + ('00' + this.selectedDate.getMinutes()).slice(-2);
+  public timeRegex = new RegExp('^([01]?[0-9]|2[0-3]):[0-5][0-9]$');
+  public locale = pl;
   public config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('jwt')
@@ -90,5 +100,75 @@ export default class CardView extends Vue {
 
   isLabelApplied (id: number) {
     return this.card.labels.find(label => label.id === id) != null;
+  }
+
+  isTimeValid () {
+    return this.timeRegex.test(this.selectedTime);
+  }
+
+  @Emit('card-update')
+  saveDateTime () {
+    // VALIDATE and SAVE is both time and date are valid
+    this.card.dueDate = undefined;
+    const dateToApply = this.selectedDate;
+    dateToApply.setSeconds(0, 0);
+    const timeParts = this.selectedTime.split(':');
+    dateToApply.setHours(parseInt(timeParts[0]));
+    dateToApply.setMinutes(parseInt(timeParts[1]));
+    this.card.dueDate = dateToApply;
+  }
+
+  @Emit('card-update')
+  deleteDateTime () {
+    // REMOVE due date from card if it's present
+    this.card.dueDate = undefined;
+  }
+
+  formatDueDateString (dateToFormat: Date) {
+    const localeString = dateToFormat.toLocaleString('pl-PL', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const dateParts = localeString.split(' ');
+    return dateParts[0] + ' ' + dateParts[1] + (new Date().getFullYear() !== dateToFormat.getFullYear() ? ' ' + dateToFormat.getFullYear() : '') + ' o ' + dateParts[3];
+  }
+
+  getDueDateLabelColor () {
+    if (this.card.dueDate != null) {
+      let color = DueDateLabelColor.None;
+      const currentDate = new Date();
+      currentDate.setSeconds(0, 0);
+      const dateWarning = new Date(this.card.dueDate);
+      dateWarning.setDate(dateWarning.getDate() - 2);
+      if (this.card.dueDateComplete) {
+        color = DueDateLabelColor.Complete;
+      } else if (currentDate > this.card.dueDate) {
+        color = DueDateLabelColor.Overdue;
+      } else if (currentDate > dateWarning) {
+        color = DueDateLabelColor.Soon;
+      }
+      return color;
+    }
+  }
+
+  getDueDateLabel () {
+    if (this.card.dueDate != null) {
+      let label: DueDateLabel = DueDateLabel.None;
+      const currentDate = new Date();
+      currentDate.setSeconds(0, 0);
+      const dateWarning = new Date(this.card.dueDate);
+      dateWarning.setDate(dateWarning.getDate() - 2);
+      if (this.card.dueDateComplete) {
+        label = DueDateLabel.Complete;
+      } else if (currentDate > this.card.dueDate) {
+        label = DueDateLabel.Overdue;
+      } else if (currentDate > dateWarning) {
+        label = DueDateLabel.Soon;
+      }
+      return label;
+    }
   }
 };
