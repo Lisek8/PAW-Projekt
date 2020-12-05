@@ -68,10 +68,32 @@
   box-shadow: -7.5px 0 #53535383;
 }
 
+.due-date-dropdown-item {
+
+}
+
+.invalidInput {
+  border-color: red;
+}
+
 .label-pick-name {
   width: 200px;
 }
 
 .bg-custom-light {
   background-color: #ececec;
+}
+
+.due-date {
+  background-color:  rgba(153, 153, 153, 0.12);
+  border-radius: 5px;
+  width: fit-content;
+}
+
+.due-date:hover {
+  background-color:  rgba(109, 109, 109, 0.12);
+}
+
+.due-date-label {
+  border-radius: 5px;
 }

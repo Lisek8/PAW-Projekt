@@ -19,6 +19,18 @@
                   </div>
                 </div>
               </div>
+              <div class="container-fluid mb-2" v-if="card.dueDate != null">
+                <h6>Termin</h6>
+                <div class="due-date p-2">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" v-model="card.dueDateComplete" id="dueDateComplete">
+                    <label class="form-check-label" for="dueDateComplete">
+                      {{ formatDueDateString(card.dueDate) }}
+                      <span v-if="getDueDateLabel() != ''" class="ml-1 pl-1 pr-1 due-date-label" :style="{ backgroundColor: getDueDateLabelColor() }">{{ getDueDateLabel() }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div class="container-fluid">
                 <h6>Opis</h6>
                 <div v-if="!editingDescription" @click="enableDescriptionEditing" class="description w-100 p-2">{{ card?.description }}</div>
@@ -63,6 +75,35 @@
                             </div>
                           </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dropdown">
+                  <div class="card-menu-button p-2 mb-2" type="button" id="dropdownMenuLabels" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-clock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                      <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                    Termin
+                  </div>
+                  <div class="dropdown-menu label-dropdown bg-custom-light" aria-labelledby="dropdownMenuLabels" @click.stop="">
+                    <span class="container-fluid text-center text-secondary label-dropdown-header">
+                      Termin
+                    </span>
+                    <div class="dropdown-divider"></div>
+                    <div class="due-date-dropdown-item m-1 p-1">
+                      <label for="timeInput" class="w-100">Czas</label>
+                      <input v-model="selectedTime" :class="{ invalidInput : !isTimeValid() }" class="w-100" type="text" id="timeInput"/>
+                    </div>
+                    <div class="due-date-dropdown-item m-1 p-1">
+                      <label for="dateInput" class="w-100">Data</label>
+                      <datepicker :locale="locale" v-model="selectedDate" id="dateInput"/>
+                    </div>
+                    <div class="due-date-dropdown-item m-1 p-1">
+                      <div class="d-flex flex-row justify-content-between">
+                        <div class="btn btn-success" @click="saveDateTime()">Zapisz</div>
+                        <div class="btn btn-danger" @click="deleteDateTime()">Usuń</div>
                       </div>
                     </div>
                   </div>
