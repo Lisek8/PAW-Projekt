@@ -92,15 +92,15 @@
                       Termin
                     </span>
                     <div class="dropdown-divider"></div>
-                    <div class="due-date-dropdown-item m-1 p-1">
+                    <div class="m-1 p-1">
                       <label for="timeInput" class="w-100">Czas</label>
                       <input v-model="selectedTime" :class="{ invalidInput : !isTimeValid() }" class="w-100" type="text" id="timeInput"/>
                     </div>
-                    <div class="due-date-dropdown-item m-1 p-1">
+                    <div class="m-1 p-1">
                       <label for="dateInput" class="w-100">Data</label>
                       <datepicker :locale="locale" v-model="selectedDate" id="dateInput"/>
                     </div>
-                    <div class="due-date-dropdown-item m-1 p-1">
+                    <div class="m-1 p-1">
                       <div class="d-flex flex-row justify-content-between">
                         <div class="btn btn-success" @click="saveDateTime()">Zapisz</div>
                         <div class="btn btn-danger" @click="deleteDateTime()">Usuń</div>
