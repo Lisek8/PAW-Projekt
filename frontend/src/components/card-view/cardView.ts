@@ -1,4 +1,4 @@
-import { Card } from '@/dataStructures/card';
+import { Card, Label } from '@/dataStructures/card';
 import { LabelContainer } from '@/dataStructures/label-container';
 import axios from 'axios';
 import { Options, Vue } from 'vue-class-component';
@@ -11,7 +11,10 @@ import { DueDateLabel, DueDateLabelColor } from '@/dataStructures/dueDateLabel';
 @Options({
   emits: [
     'update:card',
-    'card-update'
+    'card-update',
+    'create-label',
+    'edit-label',
+    'delete-label'
   ],
   directives: {
     focus: {
@@ -34,6 +37,13 @@ export default class CardView extends Vue {
   public selectedTime = this.selectedDate.getHours() + ':' + ('00' + this.selectedDate.getMinutes()).slice(-2);
   public timeRegex = new RegExp('^([01]?[0-9]|2[0-3]):[0-5][0-9]$');
   public locale = pl;
+  public showLabelEditMenu = false;
+  public editingLabel = false;
+  public creatingLabel = false;
+  public editedLabel!: Label;
+  public labelColor = '#000000';
+  public labelName = '';
+
   public config = {
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('jwt')
@@ -171,4 +181,45 @@ export default class CardView extends Vue {
       return label;
     }
   }
-};
+
+  openCreateLabelMenu () {
+    this.editingLabel = false;
+    this.creatingLabel = true;
+    this.showLabelEditMenu = true;
+  }
+
+  openEditLabelMenu (labelToEdit: Label) {
+    this.editedLabel = labelToEdit;
+    this.editingLabel = true;
+    this.creatingLabel = false;
+    this.showLabelEditMenu = true;
+  }
+
+  closeCreateLabelMenu (save: boolean) {
+    if (save) {
+      const newLabel: Label = {
+        id: 666,
+        name: this.labelName,
+        color: this.labelColor
+      };
+      this.$emit('create-label', newLabel);
+    }
+    this.showLabelEditMenu = false;
+    this.creatingLabel = false;
+  }
+
+  closeEditLabelMenu (save: boolean) {
+    if (save) {
+      const editedLabel: Label = {
+        id: 666,
+        name: this.labelName,
+        color: this.labelColor
+      };
+      this.$emit('edit-label', editedLabel);
+    } else {
+      this.$emit('delete-label', this.editedLabel);
+    }
+    this.showLabelEditMenu = false;
+    this.creatingLabel = false;
+  }
+}

@@ -75,6 +75,41 @@
                             </div>
                           </div>
                         </div>
+                        <div class="p-1 label-edit" @click="openEditLabelMenu(label)">
+                          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-menu-button m-2 p-2 text-center" @click="openCreateLabelMenu()">
+                      Utwórz nową etykietę
+                    </div>
+                    <div v-if="showLabelEditMenu" class="dropdown-divider"></div>
+                    <div v-if="showLabelEditMenu" class="p-1">
+                      <div class="text-center p-2 font-weight-bold">
+                        <span v-if="editingLabel">Edycja etykiety</span>
+                        <span v-if="creatingLabel">Tworzenie etykiety</span>
+                      </div>
+                      <div class="form-group ml-2 mr-2">
+                        <label for="labelName">Nazwa</label>
+                        <input type="text" v-model="labelName" id="labelName" name="labelName" class="form-control">
+                      </div>
+                      <div class="form-group ml-2 mr-2">
+                        <label for="labelColorPicker">Kolor</label>
+                        <input type="color" v-model="labelColor" id="labelColorPicker" name="labelColorPicker" class="form-control">
+                      </div>
+                      <div class="form-group ml-2 mr-2">
+                        <label for="labelColorPicker">Podgląd</label>
+                        <div class="p-2 mr-2 mt-1 mb-1 ml-2 label-dropdown-item-content text-light" :style="{ backgroundColor: labelColor }">
+                          <div class="label-pick-name col-10">{{ labelName }}</div>
+                        </div>
+                      </div>
+                      <div class="d-flex flex-row ml-2 mr-2 justify-content-between">
+                        <div v-if="creatingLabel" class="btn btn-success" @click="closeCreateLabelMenu(true)">Dodaj</div>
+                        <div v-if="creatingLabel" class="btn btn-danger" @click="closeCreateLabelMenu(false)">Anuluj</div>
+                        <div v-if="editingLabel" class="btn btn-success" @click="closeEditLabelMenu(true)">Zapisz</div>
+                        <div v-if="editingLabel" class="btn btn-danger" @click="closeEditLabelMenu(false)">Usuń</div>
                       </div>
                     </div>
                   </div>
