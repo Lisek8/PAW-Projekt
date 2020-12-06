@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid h-100 text-light pt-3 pl-3 pr-3 d-flex flex-column" :style="{ backgroundImage: 'url(' + boardInfo.image + ')' }">
+  <div class="container-fluid h-100 text-light pt-3 pl-3 pr-3 d-flex flex-column page-background" :style="{ backgroundImage: 'url(' + boardInfo.image + ')' }">
     <div class="d-flex flex-row align-items-center mb-2">
       <div>
         <input v-if="titleEditing" v-model="editableTitle" @blur="endTitleEditing()" @keyup.enter="endTitleEditing()" v-focus>
