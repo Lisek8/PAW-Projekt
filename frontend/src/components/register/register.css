@@ -1,0 +1,7 @@
+svg {
+  font-size: calc(1.5em + .75rem + 2px);
+}
+
+.invalid {
+  border: 1px solid red;
+}
