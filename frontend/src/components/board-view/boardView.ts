@@ -11,13 +11,15 @@ import { Card, Label } from '@/dataStructures/card';
 import { LabelContainer } from '@/dataStructures/label-container';
 import router from '@/router';
 import { DueDateLabelColor } from '@/dataStructures/dueDateLabel';
+import draggable from 'vuedraggable';
 
 @Options({
   components: {
     ListCreationModal,
     CardCreationModal,
     CardView,
-    ArchiveBoardConfirmationModal
+    ArchiveBoardConfirmationModal,
+    draggable
   },
   directives: {
     focus: {
