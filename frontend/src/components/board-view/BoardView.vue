@@ -24,37 +24,41 @@
       </div>
     </div>
     <div class="d-flex flex-row flex-nowrap list-container flex-grow-1">
-      <div class="p-2 mr-3 mb-3 list text-dark" v-for="list in boardInfo.lists" :key="list">
-        <span class="list-title">
-          <input v-if="listEditing[list.id.toString()]" v-model="editableListTitle" @blur="endListEditing(list.id)" @keyup.enter="endListEditing(list.id)" v-focus>
-          <span v-else @click="startListEditing(list.id)">{{ list.title }}</span>
-        </span>
-        <div class="card-list-container">
-          <div class=" card-view p-2 m-1" v-for="card in list.items" :key="card" @click="openCardView(list.id, card.id)" data-toggle="modal" data-target="#cardViewModal">
-            <div class="d-flex flex-row flex-wrap">
-              <div v-for="label in card.labels" :key="label" class="label text-light text-center mr-1" :style="{ backgroundColor: label.color }" @click.stop="toggleLabelVisibility">
-                <span v-if="labelsVisible">{{ label.name }}</span>
+      <draggable v-model="boardInfo.lists" class="d-flex flex-row flex-nowrap" group="lists" @start="drag=true" @end="drag=false" item-key="id">
+        <template #item="{element}">
+          <div class="p-2 mr-3 mb-3 list text-dark">
+            <span class="list-title">
+              <input v-if="listEditing[element.id.toString()]" v-model="editableListTitle" @blur="endListEditing(element.id)" @keyup.enter="endListEditing(element.id)" v-focus>
+              <span v-else @click="startListEditing(element.id)">{{ element.title }}</span>
+            </span>
+            <div class="card-list-container">
+              <div class=" card-view p-2 m-1" v-for="card in element.items" :key="card" @click="openCardView(element.id, card.id)" data-toggle="modal" data-target="#cardViewModal">
+                <div class="d-flex flex-row flex-wrap">
+                  <div v-for="label in card.labels" :key="label" class="label text-light text-center mr-1" :style="{ backgroundColor: label.color }" @click.stop="toggleLabelVisibility">
+                    <span v-if="labelsVisible">{{ label.name }}</span>
+                  </div>
+                </div>
+                <span>{{ card.title }}</span>
+                <div class="due-date mb-2 p-1 text-light" v-if="card.dueDate != null" :style="{ backgroundColor: getDueDateLabelColor() }">
+                  <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-clock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                    <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                  </svg>
+                  {{ formatDueDateString(card.dueDate) }}
+                </div>
               </div>
             </div>
-            <span>{{ card.title }}</span>
-            <div class="due-date mb-2 p-1 text-light" v-if="card.dueDate != null" :style="{ backgroundColor: getDueDateLabelColor() }">
-              <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-clock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
-                <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+            <div class="p-2 mt-2 add-card-button" @click="openCardCreationModal(element.id)" data-toggle="modal" data-target="#cardCreationModal">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
               </svg>
-              {{ formatDueDateString(card.dueDate) }}
+              <span>
+                Dodaj kartę
+              </span>
             </div>
           </div>
-        </div>
-        <div class="p-2 mt-2 add-card-button" @click="openCardCreationModal(list.id)" data-toggle="modal" data-target="#cardCreationModal">
-          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-          </svg>
-          <span>
-            Dodaj kartę
-          </span>
-        </div>
-      </div>
+        </template>
+      </draggable>
       <div class="p-2 add-list-button"  @click="openListCreationModal" data-toggle="modal" data-target="#listCreationModal">
         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
