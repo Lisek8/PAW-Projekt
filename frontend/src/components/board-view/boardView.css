@@ -108,3 +108,7 @@
   width: fit-content;
   font-size: small;
 }
+
+.page-background {
+  background-size: cover;
+}
