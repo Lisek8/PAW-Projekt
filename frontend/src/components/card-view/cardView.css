@@ -58,6 +58,7 @@
 }
 
 .label-dropdown-item-content {
+  max-width: 240px;
   border-radius: 3px;
   font-weight: 500;
   box-sizing: border-box;
@@ -92,4 +93,15 @@
 
 .due-date-label {
   border-radius: 5px;
+}
+
+.label-edit:hover {
+  background-color:  rgba(109, 109, 109, 0.12);
+}
+
+.dropdown-divider {
+  height: 0;
+  margin: .5rem 0;
+  overflow: hidden;
+  border-top: 1px solid #a5a5a5;
 }

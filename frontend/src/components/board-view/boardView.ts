@@ -249,4 +249,36 @@ export default class BoardView extends Vue {
       return color;
     }
   }
+
+  handleCreateLabel (label: Label) {
+    // Add through backend if successfull add it
+    if (this.boardInfo.labels == null) {
+      this.boardInfo.labels = [];
+    }
+    this.boardInfo.labels.push(label);
+  }
+
+  handleEditLabel (label: Label) {
+    // Edit trhough backend if successfull edit it
+    if (this.boardInfo.labels != null) {
+      for (const labelInArray of this.boardInfo.labels) {
+        if (labelInArray.id === label.id) {
+          const index = this.boardInfo.labels.indexOf(labelInArray);
+          if (index !== -1) {
+            this.boardInfo.labels[index] = label;
+          }
+        }
+      }
+    }
+  }
+
+  handleDeleteLabel (label: Label) {
+    // Delete through backend if successfull yeet it
+    if (this.boardInfo.labels != null) {
+      const index = this.boardInfo.labels.indexOf(label);
+      if (index !== -1) {
+        this.boardInfo.labels.splice(index, 1);
+      }
+    }
+  }
 };
