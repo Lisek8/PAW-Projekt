@@ -3,7 +3,8 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content bg-custom-light">
         <div class="modal-header">
-          <h5 class="modal-title" id="cardViewModal">{{ card?.title }}</h5>
+          <input class="w-100" v-if="editingCardTitle" v-model="editableCardTitle" @blur="endCardTitleEditing" @keyup.enter="endCardTitleEditing" v-focus>
+          <h5 v-else @click="startCardTitleEditing" class="modal-title w-100" id="cardViewModal">{{ card?.title }}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>

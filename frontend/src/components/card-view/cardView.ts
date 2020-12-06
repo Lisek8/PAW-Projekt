@@ -43,6 +43,8 @@ export default class CardView extends Vue {
   public editedLabel!: Label;
   public labelColor = '#000000';
   public labelName = '';
+  public editingCardTitle = false;
+  public editableCardTitle = '';
 
   public config = {
     headers: {
@@ -221,5 +223,15 @@ export default class CardView extends Vue {
     }
     this.showLabelEditMenu = false;
     this.creatingLabel = false;
+  }
+
+  startCardTitleEditing () {
+    this.editingCardTitle = true;
+    this.editableCardTitle = this.card.title;
+  }
+
+  endCardTitleEditing () {
+    this.editingCardTitle = false;
+    this.card.title = this.editableCardTitle;
   }
 }
