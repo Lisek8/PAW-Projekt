@@ -3,6 +3,7 @@ import Content from '../components/content/Content.vue';
 import Login from '../components/login/Login.vue';
 import Boards from '../components/boards/Boards.vue';
 import BoardView from '../components/board-view/BoardView.vue';
+import Register from '@/components/register/Register.vue';
 
 function checkIfUserIsLoggedIn (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) {
   let isAuthenticated = false;
@@ -28,6 +29,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   },
   {
     path: '/boards',

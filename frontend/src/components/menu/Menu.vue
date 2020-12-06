@@ -9,6 +9,7 @@
   <ul class="navbar-nav ml-md-auto">
       <li class="nav-item" v-if="!loggedIn">
         <router-link to="/login" class="btn btn-outline-warning my-2 my-sm-0">Zaloguj się</router-link>
+        <router-link to="/register" class="btn btn-outline-light my-2 my-sm-0 ml-2">Zarejestruj się</router-link>
       </li>
       <template v-else>
         <form class="form-inline" @submit.prevent>
