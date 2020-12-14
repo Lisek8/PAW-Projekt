@@ -128,6 +128,7 @@ export default class CardView extends Vue {
     dateToApply.setHours(parseInt(timeParts[0]));
     dateToApply.setMinutes(parseInt(timeParts[1]));
     this.card.dueDate = dateToApply;
+    console.log(dateToApply.getDate() + '-' + (dateToApply.getMonth() + 1) + '-' + dateToApply.getFullYear() + ' ' + dateToApply.getHours() + ':' + dateToApply.getMinutes());
   }
 
   @Emit('card-update')
