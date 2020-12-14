@@ -162,9 +162,15 @@ sets the list name to the name parameter. Current user has to be admin of the bo
 
 
 
-### /cardDescription(int id, string name) (Put)
+### /cardDescription(int id, string description) (Put)
 
 sets the card description to the description parameter. Current user has to be logged in and have access to the board
+
+
+### /cardName(int id, string name) (Put)
+
+sets the card name to the name parameter. Current user has to be logged in and have access to the board
+
 
 
 ### /label (Post)

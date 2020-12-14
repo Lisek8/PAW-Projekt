@@ -1,6 +1,5 @@
 package com.foxtrot3.trello;
 
-import com.foxtrot3.trello.database.card.UserCard;
 import com.foxtrot3.trello.database.card.UserCardRepo;
 import com.foxtrot3.trello.database.json.*;
 import com.foxtrot3.trello.database.board.Board;
@@ -34,8 +33,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -323,7 +322,7 @@ public class MainController extends SpringBootServletInitializer {
         card.setName(cardEditForm.getName());
         card.setDescription(cardEditForm.getDescription());
         card.setArchived(cardEditForm.isArchived());
-        card.setDeadline(cardEditForm.getDeadline());
+        card.setDeadlineDate(cardEditForm.getDeadline());
         card.setListId(cardEditForm.getListId());
         cardRepo.save(card);
         return card;
@@ -341,6 +340,46 @@ public class MainController extends SpringBootServletInitializer {
         UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
         if (userBoard != null) {
             card.setDescription(description);
+            cardRepo.save(card);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
+
+    @PutMapping("/cardName")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void setCardName(int id, String name, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            card.setName(name);
+            cardRepo.save(card);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
+    @PutMapping("/deadline")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void setDeadline(int id, String deadline, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            card.setDeadline(deadline);
             cardRepo.save(card);
         }else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

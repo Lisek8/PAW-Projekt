@@ -1,9 +1,11 @@
 package com.foxtrot3.trello.database.card;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.foxtrot3.trello.database.label.Label;
 
 import javax.persistence.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 @Table(name="cards")
 public class Card {
     @Transient
-    private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -21,8 +23,12 @@ public class Card {
     private int position;
     @Column(name="is_archived")
     private boolean isArchived = false;
-    @Column(columnDefinition = "DATE")
-    private Date deadline;
+    @JsonInclude
+    @Transient
+    private String deadline;
+    @JsonIgnore
+    @Column(columnDefinition = "DATE", name="deadline")
+    private Date deadlineDate;
     @Column(columnDefinition = "DATE", name="create_date")
     private Date createDate;
     @Column(name="list_id")
@@ -80,12 +86,12 @@ public class Card {
         isArchived = archived;
     }
 
-    public Date getDeadline() {
-        return deadline;
+    public Date getDeadlineDate() {
+        return deadlineDate;
     }
 
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setDeadlineDate(Date deadline) {
+        this.deadlineDate = deadline;
     }
 
     public Date getCreateDate() {
@@ -110,5 +116,18 @@ public class Card {
 
     public void setLabels(List<Label> labels) {
         this.labels = labels;
+    }
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+        try {
+            this.deadlineDate = DATE_TIME_FORMAT.parse(this.deadline);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
