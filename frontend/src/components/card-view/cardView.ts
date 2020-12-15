@@ -233,5 +233,6 @@ export default class CardView extends Vue {
   endCardTitleEditing () {
     this.editingCardTitle = false;
     this.card.title = this.editableCardTitle;
+    this.updateCard();
   }
 }
