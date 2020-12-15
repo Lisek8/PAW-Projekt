@@ -120,20 +120,31 @@ export default class CardView extends Vue {
 
   @Emit('card-update')
   saveDateTime () {
-    // VALIDATE and SAVE is both time and date are valid
     this.card.dueDate = undefined;
     const dateToApply = this.selectedDate;
     dateToApply.setSeconds(0, 0);
     const timeParts = this.selectedTime.split(':');
     dateToApply.setHours(parseInt(timeParts[0]));
     dateToApply.setMinutes(parseInt(timeParts[1]));
-    this.card.dueDate = dateToApply;
+    this.config.params = {
+      id: this.card.id,
+      deadline: dateToApply.getDate() + '-' + (dateToApply.getMonth() + 1) + '-' + dateToApply.getFullYear() + ' ' + dateToApply.getHours() + ':' + dateToApply.getMinutes()
+    };
+    axios.put(Environment.restServices + 'deadline', {}, this.config)
+      .then(() => {
+        this.card.dueDate = dateToApply;
+      });
   }
 
   @Emit('card-update')
   deleteDateTime () {
-    // REMOVE due date from card if it's present
-    this.card.dueDate = undefined;
+    this.config.params = {
+      id: this.card.id
+    };
+    axios.delete(Environment.restServices + 'deadline', this.config)
+      .then(() => {
+        this.card.dueDate = undefined;
+      });
   }
 
   formatDueDateString (dateToFormat: Date) {
