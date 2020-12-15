@@ -253,34 +253,76 @@ export default class BoardView extends Vue {
   }
 
   handleCreateLabel (label: Label) {
-    // Add through backend if successfull add it
-    if (this.boardInfo.labels == null) {
-      this.boardInfo.labels = [];
-    }
-    this.boardInfo.labels.push(label);
+    const requestBody = {
+      id: this.boardId,
+      name: label.name,
+      color: label.color
+    };
+    axios.post(Environment.restServices + 'label', requestBody, this.config)
+      .then(response => {
+        if (this.boardInfo.labels == null) {
+          this.boardInfo.labels = [];
+        }
+        label.id = response.data;
+        this.boardInfo.labels.push(label);
+      });
   }
 
   handleEditLabel (label: Label) {
-    // Edit trhough backend if successfull edit it
-    if (this.boardInfo.labels != null) {
-      for (const labelInArray of this.boardInfo.labels) {
-        if (labelInArray.id === label.id) {
-          const index = this.boardInfo.labels.indexOf(labelInArray);
-          if (index !== -1) {
-            this.boardInfo.labels[index] = label;
+    const requestBody = {
+      id: label.id,
+      name: label.name,
+      color: label.color
+    };
+    this.config.params = {};
+    axios.put(Environment.restServices + 'label', requestBody, this.config)
+      .then(() => {
+        if (this.boardInfo.labels != null) {
+          for (const labelInArray of this.boardInfo.labels) {
+            if (labelInArray.id === label.id) {
+              const index = this.boardInfo.labels.indexOf(labelInArray);
+              if (index !== -1) {
+                this.boardInfo.labels[index] = label;
+                if (this.boardInfo.lists != null) {
+                  for (const list of this.boardInfo.lists) {
+                    if (list.items != null) {
+                      for (const card of list.items) {
+                        const labelId = card.labels.findIndex(l => l.id === label.id);
+                        card.labels[labelId] = label;
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
-      }
-    }
+      });
   }
 
   handleDeleteLabel (label: Label) {
-    // Delete through backend if successfull yeet it
-    if (this.boardInfo.labels != null) {
-      const index = this.boardInfo.labels.indexOf(label);
-      if (index !== -1) {
-        this.boardInfo.labels.splice(index, 1);
-      }
-    }
+    this.config.params = {
+      labelId: label.id
+    };
+    axios.delete(Environment.restServices + 'label', this.config)
+      .then(() => {
+        if (this.boardInfo.labels != null) {
+          const index = this.boardInfo.labels.indexOf(label);
+          if (index !== -1) {
+            this.boardInfo.labels.splice(index, 1);
+            if (this.boardInfo.lists != null) {
+              for (const list of this.boardInfo.lists) {
+                if (list.items != null) {
+                  for (const card of list.items) {
+                    if (card.labels.indexOf(label) !== -1) {
+                      card.labels.splice(card.labels.indexOf(label), 1);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
   }
 };
