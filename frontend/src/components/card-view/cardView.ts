@@ -194,6 +194,8 @@ export default class CardView extends Vue {
     this.editedLabel = labelToEdit;
     this.editingLabel = true;
     this.creatingLabel = false;
+    this.labelName = labelToEdit.name;
+    this.labelColor = labelToEdit.color;
     this.showLabelEditMenu = true;
   }
 
@@ -213,7 +215,7 @@ export default class CardView extends Vue {
   closeEditLabelMenu (save: boolean) {
     if (save) {
       const editedLabel: Label = {
-        id: 666,
+        id: this.editedLabel.id,
         name: this.labelName,
         color: this.labelColor
       };
