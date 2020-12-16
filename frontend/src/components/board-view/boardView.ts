@@ -240,7 +240,8 @@ export default class BoardView extends Vue {
       let color = DueDateLabelColor.None;
       const currentDate = new Date();
       currentDate.setSeconds(0, 0);
-      const dateWarning = new Date(card.dueDate.getDate() - 2);
+      const dateWarning = new Date(card.dueDate.getTime());
+      dateWarning.setDate(dateWarning.getDate() - 2);
       if (card.dueDateComplete) {
         color = DueDateLabelColor.Complete;
       } else if (currentDate > card.dueDate) {
@@ -248,8 +249,20 @@ export default class BoardView extends Vue {
       } else if (currentDate > dateWarning) {
         color = DueDateLabelColor.Soon;
       }
-      console.log(color);
       return color;
+    }
+  }
+
+  isFutureDate (card: Card) {
+    if (card.dueDate != null) {
+      const currentDate = new Date();
+      currentDate.setSeconds(0, 0);
+      const dateWarning = new Date(card.dueDate.getTime());
+      dateWarning.setDate(dateWarning.getDate() - 2);
+      if (!card.dueDateComplete && currentDate < dateWarning) {
+        return true;
+      }
+      return false;
     }
   }
 
