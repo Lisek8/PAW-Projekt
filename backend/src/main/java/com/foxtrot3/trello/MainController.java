@@ -167,6 +167,10 @@ public class MainController extends SpringBootServletInitializer {
         }
         else if(!board.isPrivate()){
             board = setLists(board);
+            Collections.sort(board.getLists());
+            for(com.foxtrot3.trello.database.list.List list:board.getLists()){
+                Collections.sort(list.getCards());
+            }
             return board;
         }
         else {
@@ -176,6 +180,10 @@ public class MainController extends SpringBootServletInitializer {
                 if (userBoard != null) {
                     Board b =boardRepo.findById(userBoard.getBoardId());
                     b=setLists(b);
+                    Collections.sort(b.getLists());
+                    for(com.foxtrot3.trello.database.list.List list:b.getLists()){
+                        Collections.sort(list.getCards());
+                    }
                     return b;
                 }
                 else {
