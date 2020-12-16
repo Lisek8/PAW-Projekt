@@ -301,6 +301,7 @@ public class MainController extends SpringBootServletInitializer {
                 labels.add(labelRepo.findById(cardLabel.getLabelId()));
             }
             card.setLabels(labels);
+            if(card.getDeadlineDate()!=null)card.setDeadline(card.getDeadlineDate().toString());
         }
         list.setCards(listCards);
         return list;
@@ -354,6 +355,7 @@ public class MainController extends SpringBootServletInitializer {
         for (CardLabel cardLabel : cardLabels) {
             labels.add(labelRepo.findById(cardLabel.getLabelId()));
         }
+        if(card.getDeadlineDate()!=null)card.setDeadline(card.getDeadlineDate().toString());
         card.setLabels(labels);
 
         return card;
