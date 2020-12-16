@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name="cards")
-public class Card {
+public class Card implements Comparable<Card> {
     @Transient
     private final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
     @Id
@@ -129,5 +129,12 @@ public class Card {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public int compareTo(Card o) {
+        if(this.position==o.position)return 0;
+        else if (this.position>o.position)return 1;
+        else return -1;
     }
 }

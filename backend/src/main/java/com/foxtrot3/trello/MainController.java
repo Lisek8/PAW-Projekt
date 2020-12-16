@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -108,12 +109,19 @@ public class MainController extends SpringBootServletInitializer {
     List<Board> getBoards(boolean archived){
         UserPrincipal userPrincipal = getPrincipal();
         List<UserBoard> userBoards = userBoardRepo.findAllByUserId(userPrincipal.getId());
+
         List<Board> boards = new ArrayList<>();
         for(UserBoard board : userBoards){
             Board foundBoard = boardRepo.findById(board.getBoardId());
             foundBoard = setLists(foundBoard);
             if(!archived&&!foundBoard.isArchived())boards.add(foundBoard);
             else if(archived&&foundBoard.isArchived())boards.add(foundBoard);
+        }
+        for(Board b:boards){
+            Collections.sort(b.getLists());
+            for(com.foxtrot3.trello.database.list.List list:b.getLists()){
+                Collections.sort(list.getCards());
+            }
         }
         return boards;
     }
@@ -245,6 +253,37 @@ public class MainController extends SpringBootServletInitializer {
         listRepo.save(list);
     }
 
+    @PutMapping("/listPosition")
+    void changeListPosition(int id, int oldId, int newId, HttpServletResponse response){
+        com.foxtrot3.trello.database.list.List list = listRepo.findById(id);
+        if(list==null){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("List 404");
+        }else if(oldId<1||newId<1)throw new RuntimeException("Wrongs parameters");
+
+        List<com.foxtrot3.trello.database.list.List> lists = listRepo.findAllByBoardId(list.getBoardId());
+        Collections.sort(lists);
+        if(newId>oldId) {
+            for (com.foxtrot3.trello.database.list.List l : lists) {
+                if (l.getPosition()>newId||l.getPosition()<=oldId)continue;
+                else l.setPosition(l.getPosition()-1);
+                listRepo.save(l);
+            }
+            list.setPosition(newId);
+        }else if(oldId>newId){
+            for (com.foxtrot3.trello.database.list.List l : lists) {
+                if (l.getPosition()>=oldId||l.getPosition()<newId)continue;
+                else l.setPosition(l.getPosition()+1);
+                listRepo.save(l);
+            }
+            list.setPosition(newId);
+        }
+        listRepo.save(list);
+
+    }
+
+
+
     com.foxtrot3.trello.database.list.List setCards(com.foxtrot3.trello.database.list.List list){
         List<Card>listCards = cardRepo.findAllByListId(list.getId());
         for(Card card:listCards){
@@ -310,6 +349,35 @@ public class MainController extends SpringBootServletInitializer {
         card.setLabels(labels);
 
         return card;
+    }
+
+    @PutMapping("/cardPosition")
+    void changeCardPosition(int id, int oldId, int newId, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("List 404");
+        }else if(oldId<1||newId<1)throw new RuntimeException("Wrong parameters");
+
+        List<Card> cards = cardRepo.findAllByListId(card.getListId());
+        Collections.sort(cards);
+        if(newId>oldId) {
+            for (Card c : cards) {
+                if (c.getPosition()>newId||c.getPosition()<=oldId)continue;
+                else c.setPosition(c.getPosition()-1);
+                cardRepo.save(c);
+            }
+            card.setPosition(newId);
+        }else if(oldId>newId){
+            for (Card l : cards) {
+                if (l.getPosition()>=oldId||l.getPosition()<newId)continue;
+                else l.setPosition(l.getPosition()+1);
+                cardRepo.save(l);
+            }
+            card.setPosition(newId);
+        }
+        cardRepo.save(card);
+
     }
 
     @PutMapping("/card")
@@ -387,11 +455,32 @@ public class MainController extends SpringBootServletInitializer {
         }
     }
 
+    @DeleteMapping("/deadline")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteDeadline(int id, String deadline, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            card.setDeadline(null);
+            cardRepo.save(card);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
     @PostMapping("/label")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    void createLabel(@RequestBody LabelForm labelForm){
+    int createLabel(@RequestBody LabelForm labelForm){
         Label label = new Label(labelForm.getName(), labelForm.getColor(),labelForm.getId());
         labelRepo.save(label);
+        return label.getId();
     }
 
     @PutMapping("/label")
