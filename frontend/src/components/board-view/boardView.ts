@@ -235,20 +235,20 @@ export default class BoardView extends Vue {
     return dateParts[0] + ' ' + dateParts[1] + (new Date().getFullYear() !== dateToFormat.getFullYear() ? ' ' + dateToFormat.getFullYear() : '');
   }
 
-  getDueDateLabelColor () {
-    if (this.card.dueDate != null) {
+  getDueDateLabelColor (card: Card) {
+    if (card.dueDate != null) {
       let color = DueDateLabelColor.None;
       const currentDate = new Date();
       currentDate.setSeconds(0, 0);
-      const dateWarning = new Date(this.card.dueDate);
-      dateWarning.setDate(dateWarning.getDate() - 2);
-      if (this.card.dueDateComplete) {
+      const dateWarning = new Date(card.dueDate.getDate() - 2);
+      if (card.dueDateComplete) {
         color = DueDateLabelColor.Complete;
-      } else if (currentDate > this.card.dueDate) {
+      } else if (currentDate > card.dueDate) {
         color = DueDateLabelColor.Overdue;
       } else if (currentDate > dateWarning) {
         color = DueDateLabelColor.Soon;
       }
+      console.log(color);
       return color;
     }
   }
