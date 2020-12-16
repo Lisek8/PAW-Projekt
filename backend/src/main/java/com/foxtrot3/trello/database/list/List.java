@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="lists")
-public class List {
+public class List implements Comparable<List>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,5 +76,12 @@ public class List {
 
     public void setBoardId(int boardId) {
         this.boardId = boardId;
+    }
+
+    @Override
+    public int compareTo(List o) {
+        if(this.position==o.position)return 0;
+        else if (this.position>o.position)return 1;
+        else return -1;
     }
 }
