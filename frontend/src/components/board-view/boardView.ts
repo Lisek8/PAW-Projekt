@@ -292,7 +292,6 @@ export default class BoardView extends Vue {
         oldId: evt.moved.oldIndex + 1,
         newId: evt.moved.newIndex + 1
       };
-      console.log(this.config.params);
       axios.put(Environment.restServices + 'listPosition', {}, this.config)
         .then(() => {
           return true;
