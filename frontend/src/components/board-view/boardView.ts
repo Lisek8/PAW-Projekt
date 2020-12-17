@@ -98,7 +98,7 @@ export default class BoardView extends Vue {
               description: card.description,
               id: card.id,
               labels: labels,
-              dueDate: new Date(card.deadline),
+              dueDate: card.deadline == null ? null : new Date(card.deadline),
               dueDateComplete: false
             });
           }
