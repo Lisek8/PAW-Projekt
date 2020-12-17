@@ -325,4 +325,20 @@ export default class BoardView extends Vue {
         }
       });
   }
+
+  handleMove (evt: any) {
+    if (this.boardInfo.lists != null) {
+      const listId = this.boardInfo.lists[evt.moved.newIndex].id;
+      this.config.params = {
+        id: listId,
+        oldId: evt.moved.oldIndex + 1,
+        newId: evt.moved.newIndex + 1
+      };
+      axios.put(Environment.restServices + 'listPosition', {}, this.config)
+        .then(() => {
+          return true;
+        });
+    }
+    return false;
+  }
 };

@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="d-flex flex-row flex-nowrap list-container flex-grow-1">
-      <draggable v-model="boardInfo.lists" class="d-flex flex-row flex-nowrap" group="lists" @start="drag=true" @end="drag=false" item-key="id">
+      <draggable v-model="boardInfo.lists" class="d-flex flex-row flex-nowrap" group="lists" @start="drag=true" @end="drag=false" item-key="id" @change="handleMove">
         <template #item="{element}">
           <div class="p-2 mr-3 mb-3 list text-dark">
             <span class="list-title">
