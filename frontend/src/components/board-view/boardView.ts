@@ -98,6 +98,7 @@ export default class BoardView extends Vue {
               description: card.description,
               id: card.id,
               labels: labels,
+              dueDate: new Date(card.deadline),
               dueDateComplete: false
             });
           }
@@ -234,21 +235,34 @@ export default class BoardView extends Vue {
     return dateParts[0] + ' ' + dateParts[1] + (new Date().getFullYear() !== dateToFormat.getFullYear() ? ' ' + dateToFormat.getFullYear() : '');
   }
 
-  getDueDateLabelColor () {
-    if (this.card.dueDate != null) {
+  getDueDateLabelColor (card: Card) {
+    if (card.dueDate != null) {
       let color = DueDateLabelColor.None;
       const currentDate = new Date();
       currentDate.setSeconds(0, 0);
-      const dateWarning = new Date(this.card.dueDate);
+      const dateWarning = new Date(card.dueDate.getTime());
       dateWarning.setDate(dateWarning.getDate() - 2);
-      if (this.card.dueDateComplete) {
+      if (card.dueDateComplete) {
         color = DueDateLabelColor.Complete;
-      } else if (currentDate > this.card.dueDate) {
+      } else if (currentDate > card.dueDate) {
         color = DueDateLabelColor.Overdue;
       } else if (currentDate > dateWarning) {
         color = DueDateLabelColor.Soon;
       }
       return color;
+    }
+  }
+
+  isFutureDate (card: Card) {
+    if (card.dueDate != null) {
+      const currentDate = new Date();
+      currentDate.setSeconds(0, 0);
+      const dateWarning = new Date(card.dueDate.getTime());
+      dateWarning.setDate(dateWarning.getDate() - 2);
+      if (!card.dueDateComplete && currentDate < dateWarning) {
+        return true;
+      }
+      return false;
     }
   }
 
