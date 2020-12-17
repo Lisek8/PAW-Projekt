@@ -477,7 +477,8 @@ public class MainController extends SpringBootServletInitializer {
         UserPrincipal userPrincipal = getPrincipal();
         UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
         if (userBoard != null) {
-            card.setDeadline(null);
+            card.setDeadline("");
+            card.setDeadlineDate(null);
             cardRepo.save(card);
         }else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
