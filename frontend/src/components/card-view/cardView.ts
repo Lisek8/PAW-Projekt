@@ -1,4 +1,4 @@
-import { Card, Label } from '@/dataStructures/card';
+import { Card, Label, Task } from '@/dataStructures/card';
 import { LabelContainer } from '@/dataStructures/label-container';
 import axios from 'axios';
 import { Options, Vue } from 'vue-class-component';
@@ -14,7 +14,8 @@ import { DueDateLabel, DueDateLabelColor } from '@/dataStructures/dueDateLabel';
     'card-update',
     'create-label',
     'edit-label',
-    'delete-label'
+    'delete-label',
+    'tasklists-update'
   ],
   directives: {
     focus: {
@@ -45,6 +46,8 @@ export default class CardView extends Vue {
   public labelName = '';
   public editingCardTitle = false;
   public editableCardTitle = '';
+  public taskListTitle = '';
+  public itemToBeAddedToTaskList = '';
 
   public config = {
     headers: {
@@ -247,5 +250,34 @@ export default class CardView extends Vue {
     this.editingCardTitle = false;
     this.card.title = this.editableCardTitle;
     this.updateCard();
+  }
+
+  @Emit('card-update')
+  addTaskList () {
+    const taskListToCreateTitle = this.taskListTitle;
+    this.taskListTitle = '';
+    this.card.taskList = {
+      title: taskListToCreateTitle,
+      items: []
+    };
+  }
+
+  @Emit('card-update')
+  addItemToTaskList () {
+    const itemToBeAdded = this.itemToBeAddedToTaskList;
+    this.itemToBeAddedToTaskList = '';
+    if (this.card.taskList != null) {
+      this.card.taskList.items.push({
+        title: itemToBeAdded,
+        done: false
+      });
+    }
+  }
+
+  @Emit('card-update')
+  deleteItemFromTaskList (taskToDelete: Task) {
+    if (this.card.taskList != null) {
+      this.card.taskList.items = this.card.taskList.items.filter(itemToCheck => itemToCheck !== taskToDelete);
+    }
   }
 }

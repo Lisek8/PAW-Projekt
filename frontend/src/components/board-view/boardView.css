@@ -107,8 +107,13 @@
   border-radius: 5px;
   width: fit-content;
   font-size: small;
+  height: fit-content;
 }
 
 .page-background {
   background-size: cover;
+}
+
+.task-list-complete {
+  background-color: #3dcf29;
 }
