@@ -171,7 +171,9 @@ sets the card description to the description parameter. Current user has to be l
 
 sets the card name to the name parameter. Current user has to be logged in and have access to the board
 
+### /completed(int id) (Put)
 
+sets the cards task as completed, or as not completed, if it was completed already
 
 ### /label (Post)
 

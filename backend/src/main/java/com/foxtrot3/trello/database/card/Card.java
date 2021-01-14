@@ -33,6 +33,7 @@ public class Card implements Comparable<Card> {
     private Date createDate;
     @Column(name="list_id")
     private int listId;
+    private boolean completed;
     @JsonInclude()
     @Transient
     private java.util.List<Label> labels;
@@ -129,6 +130,14 @@ public class Card implements Comparable<Card> {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     @Override

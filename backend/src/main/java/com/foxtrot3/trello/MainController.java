@@ -14,6 +14,10 @@ import com.foxtrot3.trello.database.label.CardLabelRepo;
 import com.foxtrot3.trello.database.label.Label;
 import com.foxtrot3.trello.database.label.LabelRepo;
 import com.foxtrot3.trello.database.list.ListRepo;
+import com.foxtrot3.trello.database.tasklist.Task;
+import com.foxtrot3.trello.database.tasklist.TaskList;
+import com.foxtrot3.trello.database.tasklist.TaskListRepo;
+import com.foxtrot3.trello.database.tasklist.TaskRepo;
 import com.foxtrot3.trello.database.user.User;
 import com.foxtrot3.trello.database.user.UserRepo;
 import com.foxtrot3.trello.security.*;
@@ -69,6 +73,11 @@ public class MainController extends SpringBootServletInitializer {
     LabelRepo labelRepo;
     @Autowired
     CardLabelRepo cardLabelRepo;
+    @Autowired
+    TaskListRepo taskListRepo;
+    @Autowired
+    TaskRepo taskRepo;
+
 
     @GetMapping("/hello")
     @ResponseBody
@@ -235,6 +244,11 @@ public class MainController extends SpringBootServletInitializer {
                 List<Card>cardList = cardRepo.findAllByListId(list.getId());
                 for(Card card:cardList){
                     userCardRepo.deleteAllByCardId(card.getId());
+                    List<TaskList>tasklist = taskListRepo.findAllByCardId(id);
+                    for(TaskList l:tasklist){
+                        taskRepo.deleteAllByTaskListId(l.getId());
+                    }
+                    taskListRepo.deleteAllByCardId(card.getId());
                 }
                 cardRepo.deleteAllByListId(list.getId());
             }
@@ -343,6 +357,16 @@ public class MainController extends SpringBootServletInitializer {
         cardRepo.save(card);
     }
 
+    @PutMapping("/completed")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void createCard(int id){
+        Card card = cardRepo.findById(id);
+        if(card==null)throw new RuntimeException("List 404");
+        card.setCompleted(!card.isCompleted());
+        cardRepo.save(card);
+    }
+
+
     @GetMapping("/card")
     Card showCard(int id, HttpServletResponse response) {
         Card card = cardRepo.findById(id);
@@ -443,6 +467,107 @@ public class MainController extends SpringBootServletInitializer {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             throw new RuntimeException("No access to the board");
         }
+    }
+
+    @PostMapping("/taskList")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void addTaskList(int id, String name, HttpServletResponse response){
+        Card card = cardRepo.findById(id);
+        if(card==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Card 404");
+        }
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(card.getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            TaskList taskList = new TaskList(name, id);
+            taskListRepo.save(taskList);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
+    @DeleteMapping("/taskList")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteTaskList(int id, HttpServletResponse response){
+        TaskList taskList = taskListRepo.findById(id);
+        if(taskList==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("TaskList 404");
+        }
+        taskRepo.deleteAllByTaskListId(id);
+        taskListRepo.deleteAllById(id);
+    }
+
+    @PutMapping("/taskList")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void renameTaskList(int id, String name, HttpServletResponse response){
+        TaskList taskList = taskListRepo.findById(id);
+        if(taskList==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("TaskList 404");
+        }
+        if(name!=null)taskList.setName(name);
+        taskListRepo.save(taskList);
+    }
+
+    @PostMapping("/task")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void addTask(int id, String name, HttpServletResponse response){
+        TaskList taskList = taskListRepo.findById(id);
+        if(taskList==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("TaskList 404");
+        }
+        UserPrincipal userPrincipal = getPrincipal();
+        UserBoard userBoard = userBoardRepo.findByBoardIdAndUserId(listRepo.findById(cardRepo.findById(taskList.getCardId()).getListId()).getBoardId(), userPrincipal.getId());
+        if (userBoard != null) {
+            Task task = new Task(name, id);
+            taskRepo.save(task);
+        }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new RuntimeException("No access to the board");
+        }
+    }
+
+    @DeleteMapping("/task")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void deleteTask(int id, HttpServletResponse response){
+        Task task = taskRepo.findById(id);
+        if(task==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Task 404");
+        }
+        taskRepo.deleteTaskById(id);
+    }
+
+    @PutMapping("/task")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void renameTask(int id, String name, HttpServletResponse response){
+        Task task = taskRepo.findById(id);
+        if(task==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Task 404");
+        }
+        if(name!=null)task.setName(name);
+        taskRepo.save(task);
+    }
+
+    @PutMapping("/taskCompletion")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    void setCompleted(int id, HttpServletResponse response){
+        Task task = taskRepo.findById(id);
+        if(task==null){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            throw new RuntimeException("Task 404");
+        }
+        task.setDone(!task.isDone());
+        taskRepo.save(task);
+        TaskList taskList = taskListRepo.findById(task.getTaskListId());
+        List<Task>tasksInList = taskRepo.findAllByTaskListId(taskList.getId());
+        List<Task>completedTasks = taskRepo.findAllByTaskListIdAndAndDone(taskList.getId(), true);
+        taskList.setCompleted(completedTasks.size()/tasksInList.size());
     }
 
     @PutMapping("/deadline")
